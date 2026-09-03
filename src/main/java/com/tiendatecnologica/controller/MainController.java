@@ -18,12 +18,12 @@ public class MainController {
 
     @FXML
     public void abrirProductos() {
-        // TODO (Persona 1): cargar productos.fxml
+        cargarVista("/fxml/productos.fxml");
     }
 
     @FXML
     public void abrirInventario() {
-        // TODO (Persona 1): cargar inventario.fxml
+        cargarVista("/fxml/inventario.fxml");
     }
 
     @FXML
