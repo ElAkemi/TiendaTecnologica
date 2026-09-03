@@ -1,0 +1,14 @@
+.menu-lateral {
+    -fx-background-color: #2b2d42;
+}
+
+.menu-lateral .button {
+    -fx-background-color: #edf2f4;
+    -fx-text-fill: #2b2d42;
+    -fx-font-size: 13px;
+}
+
+.menu-lateral .button:hover {
+    -fx-background-color: #8d99ae;
+    -fx-text-fill: white;
+}
