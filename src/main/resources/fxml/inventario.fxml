@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.tiendatecnologica.controller.InventarioController">
+
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Código de producto:"/>
+                <TextField fx:id="campoCodigoProducto" promptText="ej. P001"/>
+                <Label text="Cantidad:"/>
+                <TextField fx:id="campoCantidad" prefWidth="80"/>
+                <Label text="Motivo:"/>
+                <TextField fx:id="campoMotivo" prefWidth="200"/>
+            </HBox>
+
+            <HBox spacing="8">
+                <Button text="Registrar entrada" onAction="#registrarEntrada"/>
+                <Button text="Registrar salida" onAction="#registrarSalida"/>
+                <Button text="Ajustar inventario" onAction="#realizarAjuste"/>
+                <Button text="Filtrar por producto" onAction="#filtrarMovimientos"/>
+                <Button text="Ver todos" onAction="#cargarMovimientos"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tablaMovimientos">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="90"/>
+                <TableColumn fx:id="colProducto" text="Producto" prefWidth="90"/>
+                <TableColumn fx:id="colTipo" text="Tipo" prefWidth="80"/>
+                <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="80"/>
+                <TableColumn fx:id="colFecha" text="Fecha" prefWidth="160"/>
+                <TableColumn fx:id="colMotivo" text="Motivo" prefWidth="200"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <bottom>
+        <VBox spacing="5">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Alertas de stock (bajo o agotado):" style="-fx-font-weight: bold;"/>
+            <TableView fx:id="tablaAlertas" prefHeight="150">
+                <columns>
+                    <TableColumn fx:id="colAlertaCodigo" text="Código" prefWidth="100"/>
+                    <TableColumn fx:id="colAlertaNombre" text="Nombre" prefWidth="220"/>
+                    <TableColumn fx:id="colAlertaStock" text="Stock actual" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </bottom>
+
+</BorderPane>

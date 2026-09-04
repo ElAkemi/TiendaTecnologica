@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.tiendatecnologica.controller.ProductoController">
+
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Buscar:"/>
+            <TextField fx:id="campoBusqueda" promptText="código, nombre, categoría o marca"/>
+            <Button text="Buscar" onAction="#buscarProducto"/>
+            <Button text="Ver todos" onAction="#cargarProductos"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tablaProductos">
+            <columns>
+                <TableColumn fx:id="colCodigo" text="Código" prefWidth="90"/>
+                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="180"/>
+                <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="120"/>
+                <TableColumn fx:id="colMarca" text="Marca" prefWidth="120"/>
+                <TableColumn fx:id="colPrecioVenta" text="Precio venta" prefWidth="100"/>
+                <TableColumn fx:id="colCantidad" text="Stock" prefWidth="80"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <right>
+        <VBox spacing="8" prefWidth="240">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Código"/>
+            <TextField fx:id="campoCodigo"/>
+
+            <Label text="Nombre"/>
+            <TextField fx:id="campoNombre"/>
+
+            <Label text="Categoría"/>
+            <TextField fx:id="campoCategoria"/>
+
+            <Label text="Marca"/>
+            <TextField fx:id="campoMarca"/>
+
+            <Label text="Precio compra"/>
+            <TextField fx:id="campoPrecioCompra"/>
+
+            <Label text="Precio venta"/>
+            <TextField fx:id="campoPrecioVenta"/>
+
+            <Label text="Cantidad disponible"/>
+            <TextField fx:id="campoCantidad"/>
+
+            <Label text="Stock mínimo"/>
+            <TextField fx:id="campoStockMinimo"/>
+
+            <Label text="Meses de garantía"/>
+            <TextField fx:id="campoMesesGarantia"/>
+
+            <HBox spacing="8">
+                <Button text="Registrar" onAction="#registrarProducto"/>
+                <Button text="Modificar" onAction="#modificarProducto"/>
+            </HBox>
+            <HBox spacing="8">
+                <Button text="Eliminar" onAction="#eliminarProducto"/>
+                <Button text="Limpiar" onAction="#limpiarFormulario"/>
+            </HBox>
+        </VBox>
+    </right>
+
+</BorderPane>
