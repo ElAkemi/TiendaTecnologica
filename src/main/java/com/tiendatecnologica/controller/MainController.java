@@ -15,25 +15,25 @@ public class MainController {
 
     @FXML
     private BorderPane contenedorPrincipal;
-
-    @FXML
+   
+   @FXML
     public void abrirProductos() {
-        // TODO (Persona 1): cargar productos.fxml
+        cargarVista("/fxml/productos.fxml");
     }
 
     @FXML
     public void abrirInventario() {
-        // TODO (Persona 1): cargar inventario.fxml
+        cargarVista("/fxml/inventario.fxml");
     }
 
     @FXML
     public void abrirProveedores() {
-        // TODO (Persona 2): cargar proveedores.fxml
+        cargarVista("/fxml/proveedores.fxml");
     }
 
     @FXML
     public void abrirCompras() {
-        // TODO (Persona 2): cargar compras.fxml
+        cargarVista("/fxml/compras.fxml");
     }
 
     @FXML
