@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.tiendatecnologica.controller.VentaController">
+
+    <top>
+        <VBox spacing="8" styleClass="menu-lateral">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Cliente" style="-fx-font-weight: bold;"/>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="Cédula:"/>
+                <TextField fx:id="campoCedulaCliente" promptText="cédula del cliente"/>
+                <Button text="Buscar" onAction="#buscarCliente"/>
+                <Label fx:id="labelClienteInfo" wrapText="true"/>
+            </HBox>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <TextField fx:id="campoNombreCliente" promptText="nombre (si es nuevo)"/>
+                <TextField fx:id="campoTelefonoCliente" promptText="teléfono (8 dígitos)"/>
+                <TextField fx:id="campoEmailCliente" promptText="correo (incluir @gmail.com)"/>
+                <Button text="Registrar cliente" onAction="#registrarCliente"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="8">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Carrito" style="-fx-font-weight: bold;"/>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="Producto:"/>
+                <ComboBox fx:id="comboProductos" promptText="Seleccione un producto" prefWidth="220"/>
+                <Label text="Cantidad:"/>
+                <TextField fx:id="campoCantidadProducto" promptText="cantidad" prefWidth="80"/>
+                <Button text="Agregar" onAction="#agregarAlCarrito"/>
+                <Button text="Quitar" onAction="#quitarDelCarrito"/>
+                <Button text="Vaciar" onAction="#vaciarCarrito"/>
+            </HBox>
+
+            <TableView fx:id="tablaCarrito" prefHeight="180">
+                <columns>
+                    <TableColumn fx:id="colCarritoProducto" text="Producto" prefWidth="220"/>
+                    <TableColumn fx:id="colCarritoCantidad" text="Cantidad" prefWidth="80"/>
+                    <TableColumn fx:id="colCarritoPrecio" text="Precio unit." prefWidth="100"/>
+                    <TableColumn fx:id="colCarritoSubtotal" text="Subtotal" prefWidth="100"/>
+                </columns>
+            </TableView>
+
+            <Label text="Ventas registradas" style="-fx-font-weight: bold;"/>
+            <TableView fx:id="tablaVentas" prefHeight="180">
+                <columns>
+                    <TableColumn fx:id="colVentaId" text="Id" prefWidth="90"/>
+                    <TableColumn fx:id="colVentaFecha" text="Fecha" prefWidth="160"/>
+                    <TableColumn fx:id="colVentaCliente" text="Cliente" prefWidth="100"/>
+                    <TableColumn fx:id="colVentaTotal" text="Total" prefWidth="90"/>
+                    <TableColumn fx:id="colVentaEstado" text="Estado" prefWidth="100"/>
+                </columns>
+            </TableView>
+            <HBox spacing="8">
+                <Button text="Actualizar lista" onAction="#cargarVentas"/>
+                <Button text="Anular venta seleccionada" onAction="#anularVentaSeleccionada"/>
+            </HBox>
+        </VBox>
+    </center>
+
+    <right>
+        <VBox spacing="10" prefWidth="220">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Resumen" style="-fx-font-weight: bold;"/>
+
+            <HBox spacing="8">
+                <Label text="Subtotal:"/>
+                <Label fx:id="labelSubtotal" text="0.00"/>
+            </HBox>
+            <HBox spacing="8">
+                <Label text="Impuesto:"/>
+                <Label fx:id="labelImpuesto" text="0.00"/>
+            </HBox>
+            <HBox spacing="8">
+                <Label text="Total:" style="-fx-font-weight: bold;"/>
+                <Label fx:id="labelTotal" text="0.00" style="-fx-font-weight: bold;"/>
+            </HBox>
+
+            <Label text="Método de pago"/>
+            <ComboBox fx:id="comboMetodoPago" maxWidth="Infinity"/>
+
+            <Label text="Monto recibido"/>
+            <TextField fx:id="campoMontoRecibido"/>
+
+            <HBox spacing="8">
+                <Label text="Vuelto:"/>
+                <Label fx:id="labelVuelto" text="0.00"/>
+            </HBox>
+
+            <Button text="Confirmar venta" onAction="#confirmarVenta" maxWidth="Infinity"/>
+        </VBox>
+    </right>
+
+</BorderPane>
