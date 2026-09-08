@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" alignment="TOP_LEFT" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="com.tiendatecnologica.controller.CompraController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Gestión de Órdenes de Compra" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10">
+        <TextField fx:id="txtIdOrden" promptText="ID Orden"/>
+        <TextField fx:id="txtIdProveedor" promptText="ID Proveedor"/>
+        <TextField fx:id="txtFecha" promptText="Fecha (AAAA-MM-DD)"/>
+        <TextField fx:id="txtEstado" promptText="Estado"/>
+        <Button text="Registrar Orden" onAction="#guardarCompra"/>
+    </HBox>
+
+    <TableView fx:id="tablaCompras" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colIdOrden" text="ID Orden" prefWidth="100"/>
+            <TableColumn fx:id="colIdProveedor" text="ID Proveedor" prefWidth="120"/>
+            <TableColumn fx:id="colFecha" text="Fecha" prefWidth="120"/>
+            <TableColumn fx:id="colEstado" text="Estado" prefWidth="120"/>
+        </columns>
+    </TableView>
+</VBox>
