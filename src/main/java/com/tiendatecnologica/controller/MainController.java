@@ -38,7 +38,7 @@ public class MainController {
 
     @FXML
     public void abrirPuntoVenta() {
-        // TODO (Persona 3): cargar ventas.fxml
+        cargarVista("/fxml/ventas.fxml");
     }
 
     @FXML
