@@ -43,12 +43,17 @@ public class MainController {
 
     @FXML
     public void abrirGarantias() {
-        // TODO (Persona 4): cargar garantias.fxml
+        cargarVista("/fxml/garantias.fxml");
+    }
+
+    @FXML
+    public void abrirDevoluciones() {
+        cargarVista("/fxml/devoluciones.fxml");
     }
 
     @FXML
     public void abrirReportes() {
-        // TODO (Persona 4): cargar reportes.fxml
+        cargarVista("/fxml/reportes.fxml");
     }
 
     private void cargarVista(String rutaFxml) {
