@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.tiendatecnologica.controller.DevolucionController">
+
+    <top>
+        <VBox spacing="8" styleClass="menu-lateral">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Solicitar devolución" style="-fx-font-weight: bold;"/>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="Id de venta:"/>
+                <TextField fx:id="campoIdVenta" promptText="ej. V-00001" prefWidth="120"/>
+                <Button text="Buscar venta" onAction="#buscarVenta"/>
+                <Label text="Producto:"/>
+                <ComboBox fx:id="comboProductosVenta" promptText="Seleccione un producto de la venta" prefWidth="260"/>
+                <Label text="Cantidad:"/>
+                <TextField fx:id="campoCantidad" promptText="cantidad" prefWidth="70"/>
+            </HBox>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="Motivo:"/>
+                <TextArea fx:id="campoMotivo" promptText="motivo de la devolución" prefRowCount="2" prefWidth="400"/>
+                <Button text="Solicitar devolución" onAction="#solicitarDevolucion"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="8">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Solicitudes de devolución" style="-fx-font-weight: bold;"/>
+            <TableView fx:id="tablaDevoluciones" prefHeight="300">
+                <columns>
+                    <TableColumn fx:id="colDevolucionId" text="Id" prefWidth="90"/>
+                    <TableColumn fx:id="colDevolucionVenta" text="Venta" prefWidth="90"/>
+                    <TableColumn fx:id="colDevolucionProducto" text="Producto" prefWidth="110"/>
+                    <TableColumn fx:id="colDevolucionCantidad" text="Cantidad" prefWidth="80"/>
+                    <TableColumn fx:id="colDevolucionFecha" text="Fecha" prefWidth="160"/>
+                    <TableColumn fx:id="colDevolucionEstado" text="Estado" prefWidth="110"/>
+                </columns>
+            </TableView>
+            <HBox spacing="8">
+                <Button text="Actualizar lista" onAction="#cargarDevoluciones"/>
+                <Button text="Enviar a revisión" onAction="#enviarARevision"/>
+                <Button text="Aprobar" onAction="#aprobarDevolucion"/>
+                <Button text="Rechazar" onAction="#rechazarDevolucion"/>
+                <Button text="Finalizar" onAction="#finalizarDevolucion"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

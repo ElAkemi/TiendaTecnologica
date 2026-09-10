@@ -21,6 +21,7 @@
             <Button text="Compras" onAction="#abrirCompras" maxWidth="Infinity"/>
             <Button text="Punto de venta" onAction="#abrirPuntoVenta" maxWidth="Infinity"/>
             <Button text="Garantías" onAction="#abrirGarantias" maxWidth="Infinity"/>
+            <Button text="Devoluciones" onAction="#abrirDevoluciones" maxWidth="Infinity"/>
             <Button text="Reportes" onAction="#abrirReportes" maxWidth="Infinity"/>
         </VBox>
     </left>

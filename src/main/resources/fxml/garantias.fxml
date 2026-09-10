@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.tiendatecnologica.controller.GarantiaController">
+
+    <top>
+        <VBox spacing="8" styleClass="menu-lateral">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Solicitar garantía" style="-fx-font-weight: bold;"/>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="Id de venta:"/>
+                <TextField fx:id="campoIdVenta" promptText="ej. V-00001" prefWidth="120"/>
+                <Button fx:id="botonBuscarVenta" text="Buscar venta" onAction="#buscarVenta"/>
+                <Label text="Producto:"/>
+                <ComboBox fx:id="comboProductosVenta" promptText="Seleccione un producto de la venta" prefWidth="240"/>
+            </HBox>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="Problema reportado:"/>
+                <TextArea fx:id="campoDescripcionProblema" promptText="describa el problema" prefRowCount="2" prefWidth="400"/>
+                <Button text="Solicitar garantía" onAction="#solicitarGarantia"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="8">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Solicitudes de garantía" style="-fx-font-weight: bold;"/>
+            <TableView fx:id="tablaGarantias" prefHeight="300">
+                <columns>
+                    <TableColumn fx:id="colGarantiaId" text="Id" prefWidth="90"/>
+                    <TableColumn fx:id="colGarantiaVenta" text="Venta" prefWidth="90"/>
+                    <TableColumn fx:id="colGarantiaProducto" text="Producto" prefWidth="120"/>
+                    <TableColumn fx:id="colGarantiaFecha" text="Fecha" prefWidth="170"/>
+                    <TableColumn fx:id="colGarantiaEstado" text="Estado" prefWidth="120"/>
+                </columns>
+            </TableView>
+            <HBox spacing="8">
+                <Button text="Actualizar lista" onAction="#cargarGarantias"/>
+                <Button text="Enviar a revisión" onAction="#enviarARevision"/>
+                <Button text="Aprobar" onAction="#aprobarGarantia"/>
+                <Button text="Rechazar" onAction="#rechazarGarantia"/>
+                <Button text="Finalizar" onAction="#finalizarGarantia"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>
