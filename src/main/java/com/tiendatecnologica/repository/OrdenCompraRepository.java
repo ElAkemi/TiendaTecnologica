@@ -2,8 +2,6 @@ package com.tiendatecnologica.repository;
 
 import com.tiendatecnologica.model.DetalleCompra;
 import com.tiendatecnologica.model.OrdenCompra;
-import com.tiendatecnologica.persistence.CsvReader;
-import com.tiendatecnologica.persistence.CsvWriter;
 import com.tiendatecnologica.util.Constantes;
 
 import java.util.ArrayList;
@@ -18,9 +16,6 @@ import java.util.List;
  * Los detalles de cada orden se almacenan en otro archivo CSV.
  */
 public class OrdenCompraRepository extends CsvRepository<OrdenCompra> {
-
-    private final CsvReader lector = new CsvReader();
-    private final CsvWriter escritor = new CsvWriter();
 
     /**
      * Indica el archivo CSV donde se guardan las órdenes de compra.
