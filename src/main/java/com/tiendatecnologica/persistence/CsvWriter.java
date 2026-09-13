@@ -38,14 +38,18 @@ public class CsvWriter {
         }
     }
 
-    public void agregarLinea(String ruta, String[] datos) {
+    public void agregarLinea(String ruta, String[] encabezado, String[] datos) {
         Path destino = Path.of(ruta);
-
         try {
             crearCarpetaSiNoExiste(destino);
-
-            String linea = String.join(",", datos) + System.lineSeparator();
-            Files.writeString(destino, linea, StandardCharsets.UTF_8,
+            StringBuilder contenido = new StringBuilder();
+            if (!Files.exists(destino) || Files.size(destino) == 0) {
+                contenido.append(String.join(",", encabezado))
+                        .append(System.lineSeparator());
+            }
+            contenido.append(String.join(",", datos))
+                    .append(System.lineSeparator());
+            Files.writeString(destino, contenido, StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
             throw new RuntimeException("Error agregando línea al archivo: " + ruta, e);

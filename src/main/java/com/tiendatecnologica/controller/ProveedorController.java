@@ -40,7 +40,7 @@ public class ProveedorController {
     }
 
     private void cargarDatos() {
-        listaProveedores = FXCollections.observableArrayList(repositorio.listar());
+        listaProveedores = FXCollections.observableArrayList(repositorio.obtenerTodos());
         tablaProveedores.setItems(listaProveedores);
     }
 

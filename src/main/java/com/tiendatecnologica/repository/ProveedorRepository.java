@@ -1,44 +1,71 @@
 package com.tiendatecnologica.repository;
 
 import com.tiendatecnologica.model.Proveedor;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import com.tiendatecnologica.util.Constantes;
 
-public class ProveedorRepository {
-    private String rutaArchivo = "data/proveedores.csv";
+/**
+ * Repositorio de proveedores.
+ *
+ * Hereda el CRUD de CsvRepository y define cómo se convierte
+ * un Proveedor hacia y desde una fila de CSV.
+ */
+public class ProveedorRepository extends CsvRepository<Proveedor> {
 
-    public List<Proveedor> listar() {
-        List<Proveedor> lista = new ArrayList<>();
-        File archivo = new File(rutaArchivo);
-        if (!archivo.exists()) return lista;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
-            String linea;
-            boolean primeraLinea = true;
-            while ((linea = br.readLine()) != null) {
-                if (primeraLinea) {
-                    primeraLinea = false;
-                    continue;
-                }
-                String[] datos = linea.split(",");
-                if (datos.length >= 5) {
-                    Proveedor p = new Proveedor(datos[0], datos[1], datos[2], datos[3], datos[4]);
-                    lista.add(p);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return lista;
+    /**
+     * Indica el archivo CSV donde se guardan los proveedores.
+     */
+    @Override
+    protected String rutaArchivo() {
+        return Constantes.PROVEEDORES_CSV;
     }
 
-    public void guardar(Proveedor proveedor) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(rutaArchivo, true))) {
-            pw.println(proveedor.getId() + "," + proveedor.getNombre() + "," + 
-                       proveedor.getContacto() + "," + proveedor.getTelefono() + "," + proveedor.getCorreo());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    /**
+     * Define los encabezados del archivo de proveedores.
+     */
+    @Override
+    protected String[] encabezado() {
+        return new String[] {
+                "id",
+                "nombre",
+                "contacto",
+                "telefono",
+                "correo"
+        };
+    }
+
+    /**
+     * Convierte un proveedor en una fila de CSV.
+     */
+    @Override
+    protected String[] mapearAFila(Proveedor p) {
+        return new String[] {
+                p.getId(),
+                p.getNombre(),
+                p.getContacto(),
+                p.getTelefono(),
+                p.getCorreo()
+        };
+    }
+
+    /**
+     * Convierte una fila del CSV en un objeto Proveedor.
+     */
+    @Override
+    protected Proveedor mapearDesdeFila(String[] fila) {
+        return new Proveedor(
+                fila[0],
+                fila[1],
+                fila[2],
+                fila[3],
+                fila[4]
+        );
+    }
+
+    /**
+     * Obtiene el identificador único del proveedor.
+     */
+    @Override
+    protected String obtenerClave(Proveedor p) {
+        return p.getId();
     }
 }

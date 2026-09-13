@@ -37,7 +37,7 @@ public class CompraController {
     }
 
     private void cargarDatos() {
-        listaCompras = FXCollections.observableArrayList(repositorio.listar());
+        listaCompras = FXCollections.observableArrayList(repositorio.obtenerTodos());
         tablaCompras.setItems(listaCompras);
     }
 

@@ -76,7 +76,7 @@ public class ReporteService {
      * @return todas las órdenes de compra realizadas a proveedores
      */
     public List<OrdenCompra> obtenerCompras() {
-        return ordenCompraRepositorio.listar();
+        return ordenCompraRepositorio.obtenerTodos();
     }
 
     /**
