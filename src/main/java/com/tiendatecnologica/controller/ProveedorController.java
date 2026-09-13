@@ -1,7 +1,7 @@
 package com.tiendatecnologica.controller;
 
 import com.tiendatecnologica.model.Proveedor;
-import com.tiendatecnologica.repositorio.ProveedorRepositorio;
+import com.tiendatecnologica.repository.ProveedorRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,7 +25,7 @@ public class ProveedorController {
     @FXML private TableColumn<Proveedor, String> colTelefono;
     @FXML private TableColumn<Proveedor, String> colCorreo;
 
-    private ProveedorRepositorio repositorio = new ProveedorRepositorio();
+    private ProveedorRepository repositorio = new ProveedorRepository();
     private ObservableList<Proveedor> listaProveedores;
 
     @FXML

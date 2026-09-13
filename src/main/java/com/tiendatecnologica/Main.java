@@ -12,7 +12,7 @@ import java.io.IOException;
  * Punto de entrada de la aplicación.
  * No debe contener lógica de negocio: solo carga la ventana principal.
  */
-public class    Main extends Application {
+public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {

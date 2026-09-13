@@ -1,4 +1,4 @@
-package com.tiendatecnologica.repositorio;
+package com.tiendatecnologica.repository;
 
 import com.tiendatecnologica.model.DetalleCompra;
 import com.tiendatecnologica.model.OrdenCompra;
@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrdenCompraRepositorio {
+public class OrdenCompraRepository {
     private String rutaArchivoCompras = "data/compras.csv";
     private String rutaArchivoDetalles = "data/detalle_compras.csv";
 

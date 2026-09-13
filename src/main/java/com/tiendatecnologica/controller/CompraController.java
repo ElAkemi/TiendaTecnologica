@@ -1,7 +1,7 @@
 package com.tiendatecnologica.controller;
 
 import com.tiendatecnologica.model.OrdenCompra;
-import com.tiendatecnologica.repositorio.OrdenCompraRepositorio;
+import com.tiendatecnologica.repository.OrdenCompraRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,7 +23,7 @@ public class CompraController {
     @FXML private TableColumn<OrdenCompra, String> colFecha;
     @FXML private TableColumn<OrdenCompra, String> colEstado;
 
-    private OrdenCompraRepositorio repositorio = new OrdenCompraRepositorio();
+    private OrdenCompraRepository repositorio = new OrdenCompraRepository();
     private ObservableList<OrdenCompra> listaCompras;
 
     @FXML

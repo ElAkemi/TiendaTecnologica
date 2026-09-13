@@ -6,7 +6,7 @@ import com.tiendatecnologica.model.Producto;
 import com.tiendatecnologica.model.ProductoVendido;
 import com.tiendatecnologica.model.Venta;
 import com.tiendatecnologica.repository.DetalleVentaRepository;
-import com.tiendatecnologica.repositorio.OrdenCompraRepositorio;
+import com.tiendatecnologica.repository.OrdenCompraRepository;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,7 +25,7 @@ public class ReporteService {
     private final VentaService ventaService = new VentaService();
     private final ProductoService productoService = new ProductoService();
     private final DetalleVentaRepository detalleVentaRepository = new DetalleVentaRepository();
-    private final OrdenCompraRepositorio ordenCompraRepositorio = new OrdenCompraRepositorio();
+    private final OrdenCompraRepository ordenCompraRepositorio = new OrdenCompraRepository();
 
     /**
      * @return todas las ventas registradas (completadas y anuladas), para mostrarlas en el reporte

@@ -1,11 +1,11 @@
-package com.tiendatecnologica.repositorio;
+package com.tiendatecnologica.repository;
 
 import com.tiendatecnologica.model.Proveedor;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProveedorRepositorio {
+public class ProveedorRepository {
     private String rutaArchivo = "data/proveedores.csv";
 
     public List<Proveedor> listar() {
