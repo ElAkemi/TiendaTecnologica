@@ -4,30 +4,80 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="10" alignment="TOP_LEFT" xmlns:fx="http://javafx.com/fxml" 
+<VBox spacing="10"
+      alignment="TOP_LEFT"
+      xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.tiendatecnologica.controller.ProveedorController">
+
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <Label text="Gestión de Proveedores" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <Label text="Gestión de Proveedores"
+           style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
     <HBox spacing="10">
-        <TextField fx:id="txtId" promptText="ID"/>
-        <TextField fx:id="txtNombre" promptText="Nombre"/>
-        <TextField fx:id="txtContacto" promptText="Contacto"/>
-        <TextField fx:id="txtTelefono" promptText="Teléfono"/>
-        <TextField fx:id="txtCorreo" promptText="Correo"/>
-        <Button text="Guardar" onAction="#guardarProveedor"/>
+
+        <TextField fx:id="txtId"
+                   promptText="ID"/>
+
+        <TextField fx:id="txtNombre"
+                   promptText="Nombre"/>
+
+        <TextField fx:id="txtContacto"
+                   promptText="Contacto"/>
+
+        <TextField fx:id="txtTelefono"
+                   promptText="Teléfono"/>
+
+        <TextField fx:id="txtCorreo"
+                   promptText="Correo"/>
+
     </HBox>
 
-    <TableView fx:id="tablaProveedores" VBox.vgrow="ALWAYS">
+    <HBox spacing="10">
+
+        <Button text="Registrar"
+                onAction="#guardarProveedor"/>
+
+        <Button text="Modificar"
+                onAction="#modificarProveedor"/>
+
+        <Button text="Eliminar"
+                onAction="#eliminarProveedor"/>
+
+        <Button text="Limpiar"
+                onAction="#limpiarCampos"/>
+
+    </HBox>
+
+    <TableView fx:id="tablaProveedores"
+               VBox.vgrow="ALWAYS">
+
         <columns>
-            <TableColumn fx:id="colId" text="ID" prefWidth="80"/>
-            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
-            <TableColumn fx:id="colContacto" text="Contacto" prefWidth="150"/>
-            <TableColumn fx:id="colTelefono" text="Teléfono" prefWidth="120"/>
-            <TableColumn fx:id="colCorreo" text="Correo" prefWidth="200"/>
+
+            <TableColumn fx:id="colId"
+                         text="ID"
+                         prefWidth="80"/>
+
+            <TableColumn fx:id="colNombre"
+                         text="Nombre"
+                         prefWidth="150"/>
+
+            <TableColumn fx:id="colContacto"
+                         text="Contacto"
+                         prefWidth="150"/>
+
+            <TableColumn fx:id="colTelefono"
+                         text="Teléfono"
+                         prefWidth="120"/>
+
+            <TableColumn fx:id="colCorreo"
+                         text="Correo"
+                         prefWidth="200"/>
+
         </columns>
+
     </TableView>
+
 </VBox>
