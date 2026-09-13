@@ -7,7 +7,7 @@ import com.tiendatecnologica.util.Constantes;
 
 import java.util.ArrayList;
 import java.util.List;
-//igual, solo crea y lee csv
+
 /**
  * Repositorio de líneas de venta (detalle_ventas.csv). Igual que
  * {@code InventarioRepository}, es un historial: una vez facturada una
@@ -18,6 +18,10 @@ public class DetalleVentaRepository implements RegistroRepository<DetalleVenta> 
 
     private final CsvReader lector = new CsvReader();
     private final CsvWriter escritor = new CsvWriter();
+
+    private static final String[] ENCABEZADO = {
+            "idVenta", "codigoProducto", "cantidad", "precioUnitario"
+    };
 
     /** {@inheritDoc} */
     @Override
@@ -32,7 +36,7 @@ public class DetalleVentaRepository implements RegistroRepository<DetalleVenta> 
     /** {@inheritDoc} */
     @Override
     public void guardar(DetalleVenta detalle) {
-        escritor.agregarLinea(Constantes.DETALLE_VENTAS_CSV, mapearAFila(detalle));
+        escritor.agregarLinea(Constantes.DETALLE_VENTAS_CSV, ENCABEZADO, mapearAFila(detalle));
     }
 
     /**

@@ -23,6 +23,11 @@ public class InventarioRepository implements RegistroRepository<MovimientoInvent
     private final CsvReader lector = new CsvReader();
     private final CsvWriter escritor = new CsvWriter();
 
+    private static final String[] ENCABEZADO = {
+            "id", "codigoProducto", "tipo", "cantidad",
+            "cantidadAnterior", "cantidadNueva", "fecha", "motivo"
+    };
+
     /** {@inheritDoc} */
     @Override
     public List<MovimientoInventario> obtenerTodos() {
@@ -36,7 +41,7 @@ public class InventarioRepository implements RegistroRepository<MovimientoInvent
     /** {@inheritDoc} */
     @Override
     public void guardar(MovimientoInventario movimiento) {
-        escritor.agregarLinea(Constantes.MOVIMIENTOS_CSV, movimiento.toCsv());
+        escritor.agregarLinea(Constantes.MOVIMIENTOS_CSV, ENCABEZADO, movimiento.toCsv());
     }
 
     /**

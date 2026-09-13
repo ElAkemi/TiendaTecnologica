@@ -44,7 +44,11 @@ public abstract class CsvRepository<T> implements Repository<T> {
     /** {@inheritDoc} */
     @Override
     public void guardar(T entidad) {
-        escritor.agregarLinea(rutaArchivo(), mapearAFila(entidad));
+        escritor.agregarLinea(
+                rutaArchivo(),
+                encabezado(),
+                mapearAFila(entidad)
+        );
     }
 
     /** {@inheritDoc} */
