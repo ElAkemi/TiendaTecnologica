@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 /**
  * Movimiento de ajuste: fija el inventario en un valor exacto (ej. tras un
  * conteo físico), sin importar el valor anterior.
+ *
+ * La cantidad registrada representa la diferencia entre la cantidad anterior
+ * y la cantidad objetivo, por lo que puede ser positiva, negativa o cero.
  */
 public class AjusteInventario extends MovimientoInventario {
 
@@ -24,6 +27,13 @@ public class AjusteInventario extends MovimientoInventario {
     public AjusteInventario(String id, String codigoProducto, int cantidadObjetivo,
                             LocalDateTime fecha, String motivo) {
         super(id, codigoProducto, 0, fecha, motivo);
+
+        if (cantidadObjetivo < 0) {
+            throw new IllegalArgumentException(
+                    "La cantidad objetivo no puede ser negativa"
+            );
+        }
+
         this.cantidadObjetivo = cantidadObjetivo;
     }
 
@@ -36,7 +46,8 @@ public class AjusteInventario extends MovimientoInventario {
     /** {@inheritDoc} */
     @Override
     protected int calcularNuevaCantidad(int cantidadActual) {
-        setCantidad(Math.abs(cantidadObjetivo - cantidadActual));
+        int diferencia = cantidadObjetivo - cantidadActual;
+        setCantidad(diferencia);
         return cantidadObjetivo;
     }
 }
