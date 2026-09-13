@@ -16,90 +16,247 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.util.Locale;
 
 /**
- * Controlador de la pantalla de Reportes. Es de solo lectura: toma la
- * información ya calculada por {@link ReporteService} (que a su vez agrega
- * datos de ventas, inventario y compras) y la muestra en tablas y etiquetas.
+ * Controlador de la pantalla de reportes.
+ *
+ * Es de solo lectura: obtiene la información calculada por
+ * {@link ReporteService} y la muestra en las diferentes tablas
+ * y etiquetas de la interfaz.
+ *
+ * Los reportes incluyen información sobre ventas, productos más
+ * vendidos, productos con bajo inventario, compras a proveedores
+ * y ganancias estimadas.
  */
 public class ReporteController {
 
-    private final ReporteService reporteService = new ReporteService();
+    /** Servicio encargado de generar la información de los reportes. */
+    private final ReporteService reporteService =
+            new ReporteService();
 
     // --- Ventas ---
-    @FXML private TableView<Venta> tablaVentas;
-    @FXML private TableColumn<Venta, String> colVentaId;
-    @FXML private TableColumn<Venta, String> colVentaFecha;
-    @FXML private TableColumn<Venta, String> colVentaCliente;
-    @FXML private TableColumn<Venta, Number> colVentaTotal;
-    @FXML private TableColumn<Venta, String> colVentaEstado;
+
+    /** Tabla que muestra las ventas registradas. */
+    @FXML
+    private TableView<Venta> tablaVentas;
+
+    /** Columna que muestra el identificador de la venta. */
+    @FXML
+    private TableColumn<Venta, String> colVentaId;
+
+    /** Columna que muestra la fecha de la venta. */
+    @FXML
+    private TableColumn<Venta, String> colVentaFecha;
+
+    /** Columna que muestra el identificador del cliente. */
+    @FXML
+    private TableColumn<Venta, String> colVentaCliente;
+
+    /** Columna que muestra el total de la venta. */
+    @FXML
+    private TableColumn<Venta, Number> colVentaTotal;
+
+    /** Columna que muestra el estado de la venta. */
+    @FXML
+    private TableColumn<Venta, String> colVentaEstado;
 
     // --- Productos más vendidos ---
-    @FXML private TableView<ProductoVendido> tablaMasVendidos;
-    @FXML private TableColumn<ProductoVendido, String> colMasVendidoCodigo;
-    @FXML private TableColumn<ProductoVendido, String> colMasVendidoNombre;
-    @FXML private TableColumn<ProductoVendido, Number> colMasVendidoCantidad;
+
+    /** Tabla que muestra los productos con mayor cantidad de ventas. */
+    @FXML
+    private TableView<ProductoVendido> tablaMasVendidos;
+
+    /** Columna que muestra el código del producto más vendido. */
+    @FXML
+    private TableColumn<ProductoVendido, String> colMasVendidoCodigo;
+
+    /** Columna que muestra el nombre del producto más vendido. */
+    @FXML
+    private TableColumn<ProductoVendido, String> colMasVendidoNombre;
+
+    /** Columna que muestra la cantidad vendida del producto. */
+    @FXML
+    private TableColumn<ProductoVendido, Number> colMasVendidoCantidad;
 
     // --- Bajo inventario ---
-    @FXML private TableView<Producto> tablaBajoInventario;
-    @FXML private TableColumn<Producto, String> colBajoInvCodigo;
-    @FXML private TableColumn<Producto, String> colBajoInvNombre;
-    @FXML private TableColumn<Producto, Number> colBajoInvDisponible;
-    @FXML private TableColumn<Producto, Number> colBajoInvMinimo;
+
+    /** Tabla que muestra los productos con bajo inventario. */
+    @FXML
+    private TableView<Producto> tablaBajoInventario;
+
+    /** Columna que muestra el código del producto. */
+    @FXML
+    private TableColumn<Producto, String> colBajoInvCodigo;
+
+    /** Columna que muestra el nombre del producto. */
+    @FXML
+    private TableColumn<Producto, String> colBajoInvNombre;
+
+    /** Columna que muestra la cantidad disponible del producto. */
+    @FXML
+    private TableColumn<Producto, Number> colBajoInvDisponible;
+
+    /** Columna que muestra el stock mínimo configurado. */
+    @FXML
+    private TableColumn<Producto, Number> colBajoInvMinimo;
 
     // --- Compras a proveedores ---
-    @FXML private TableView<OrdenCompra> tablaCompras;
-    @FXML private TableColumn<OrdenCompra, String> colCompraId;
-    @FXML private TableColumn<OrdenCompra, String> colCompraProveedor;
-    @FXML private TableColumn<OrdenCompra, String> colCompraFecha;
-    @FXML private TableColumn<OrdenCompra, String> colCompraEstado;
-    @FXML private TableColumn<OrdenCompra, Double> colCompraTotal;
+
+    /** Tabla que muestra las órdenes de compra registradas. */
+    @FXML
+    private TableView<OrdenCompra> tablaCompras;
+
+    /** Columna que muestra el identificador de la orden de compra. */
+    @FXML
+    private TableColumn<OrdenCompra, String> colCompraId;
+
+    /** Columna que muestra el identificador del proveedor. */
+    @FXML
+    private TableColumn<OrdenCompra, String> colCompraProveedor;
+
+    /** Columna que muestra la fecha de la orden de compra. */
+    @FXML
+    private TableColumn<OrdenCompra, String> colCompraFecha;
+
+    /** Columna que muestra el estado de la orden de compra. */
+    @FXML
+    private TableColumn<OrdenCompra, String> colCompraEstado;
+
+    /** Columna que muestra el total de la orden de compra. */
+    @FXML
+    private TableColumn<OrdenCompra, Double> colCompraTotal;
 
     // --- Ganancias estimadas ---
-    @FXML private Label labelGananciasEstimadas;
+
+    /** Etiqueta donde se muestra la ganancia estimada. */
+    @FXML
+    private Label labelGananciasEstimadas;
 
     /**
-     * Enlaza las columnas de cada tabla con las propiedades de sus modelos
-     * y carga todos los reportes. JavaFX llama este método automáticamente
-     * después de inyectar los campos {@code @FXML}.
+     * Inicializa el controlador.
+     *
+     * Configura las columnas de las diferentes tablas y carga
+     * todos los reportes disponibles.
      */
     @FXML
     public void initialize() {
-        colVentaId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colVentaFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
-        colVentaCliente.setCellValueFactory(new PropertyValueFactory<>("idCliente"));
-        colVentaTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
-        colVentaEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
 
-        colMasVendidoCodigo.setCellValueFactory(new PropertyValueFactory<>("codigoProducto"));
-        colMasVendidoNombre.setCellValueFactory(new PropertyValueFactory<>("nombreProducto"));
-        colMasVendidoCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidadVendida"));
+        colVentaId.setCellValueFactory(
+                new PropertyValueFactory<>("id")
+        );
 
-        colBajoInvCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
-        colBajoInvNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colBajoInvDisponible.setCellValueFactory(new PropertyValueFactory<>("cantidadDisponible"));
-        colBajoInvMinimo.setCellValueFactory(new PropertyValueFactory<>("stockMinimo"));
+        colVentaFecha.setCellValueFactory(
+                new PropertyValueFactory<>("fecha")
+        );
 
-        colCompraId.setCellValueFactory(new PropertyValueFactory<>("idOrden"));
-        colCompraProveedor.setCellValueFactory(new PropertyValueFactory<>("idProveedor"));
-        colCompraFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
-        colCompraEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
-        // OrdenCompra no tiene getTotal(), sino calcularTotal(); se conecta a mano.
-        colCompraTotal.setCellValueFactory(datos ->
-                new SimpleDoubleProperty(datos.getValue().calcularTotal()).asObject());
+        colVentaCliente.setCellValueFactory(
+                new PropertyValueFactory<>("idCliente")
+        );
+
+        colVentaTotal.setCellValueFactory(
+                new PropertyValueFactory<>("total")
+        );
+
+        colVentaEstado.setCellValueFactory(
+                new PropertyValueFactory<>("estado")
+        );
+
+        colMasVendidoCodigo.setCellValueFactory(
+                new PropertyValueFactory<>("codigoProducto")
+        );
+
+        colMasVendidoNombre.setCellValueFactory(
+                new PropertyValueFactory<>("nombreProducto")
+        );
+
+        colMasVendidoCantidad.setCellValueFactory(
+                new PropertyValueFactory<>("cantidadVendida")
+        );
+
+        colBajoInvCodigo.setCellValueFactory(
+                new PropertyValueFactory<>("codigo")
+        );
+
+        colBajoInvNombre.setCellValueFactory(
+                new PropertyValueFactory<>("nombre")
+        );
+
+        colBajoInvDisponible.setCellValueFactory(
+                new PropertyValueFactory<>("cantidadDisponible")
+        );
+
+        colBajoInvMinimo.setCellValueFactory(
+                new PropertyValueFactory<>("stockMinimo")
+        );
+
+        colCompraId.setCellValueFactory(
+                new PropertyValueFactory<>("idOrden")
+        );
+
+        colCompraProveedor.setCellValueFactory(
+                new PropertyValueFactory<>("idProveedor")
+        );
+
+        colCompraFecha.setCellValueFactory(
+                new PropertyValueFactory<>("fecha")
+        );
+
+        colCompraEstado.setCellValueFactory(
+                new PropertyValueFactory<>("estado")
+        );
+
+        /*
+         * OrdenCompra no tiene un método getTotal().
+         * El total se obtiene mediante calcularTotal(), por lo que
+         * esta columna debe configurarse manualmente.
+         */
+        colCompraTotal.setCellValueFactory(
+                datos -> new SimpleDoubleProperty(
+                        datos.getValue().calcularTotal()
+                ).asObject()
+        );
 
         cargarReportes();
     }
 
     /**
-     * Recarga los cuatro reportes (ventas, productos más vendidos, bajo
-     * inventario y compras) y la ganancia estimada desde {@link ReporteService}.
+     * Recarga todos los reportes mostrados en la pantalla.
+     *
+     * Actualiza las tablas de ventas, productos más vendidos,
+     * productos con bajo inventario y compras a proveedores.
+     * También actualiza la ganancia estimada.
      */
     @FXML
     public void cargarReportes() {
-        tablaVentas.setItems(FXCollections.observableArrayList(reporteService.obtenerVentas()));
-        tablaMasVendidos.setItems(FXCollections.observableArrayList(reporteService.obtenerProductosMasVendidos()));
-        tablaBajoInventario.setItems(FXCollections.observableArrayList(reporteService.obtenerProductosBajoInventario()));
-        tablaCompras.setItems(FXCollections.observableArrayList(reporteService.obtenerCompras()));
+
+        tablaVentas.setItems(
+                FXCollections.observableArrayList(
+                        reporteService.obtenerVentas()
+                )
+        );
+
+        tablaMasVendidos.setItems(
+                FXCollections.observableArrayList(
+                        reporteService.obtenerProductosMasVendidos()
+                )
+        );
+
+        tablaBajoInventario.setItems(
+                FXCollections.observableArrayList(
+                        reporteService.obtenerProductosBajoInventario()
+                )
+        );
+
+        tablaCompras.setItems(
+                FXCollections.observableArrayList(
+                        reporteService.obtenerCompras()
+                )
+        );
+
         labelGananciasEstimadas.setText(
-                String.format(Locale.US, "%.2f", reporteService.calcularGananciasEstimadas()));
+                String.format(
+                        Locale.US,
+                        "%.2f",
+                        reporteService.calcularGananciasEstimadas()
+                )
+        );
     }
 }

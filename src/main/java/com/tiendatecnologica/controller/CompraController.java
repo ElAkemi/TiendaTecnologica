@@ -15,63 +15,102 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controlador de la vista de gestión de compras.
+ *
+ * Permite registrar órdenes de compra, agregar sus detalles,
+ * consultar las órdenes registradas y cambiar su estado a
+ * Recibida o Cancelada.
+ *
+ * La lógica de negocio se delega al {@link CompraService}.
+ */
 public class CompraController {
 
+    /** Campo para ingresar el identificador de la orden. */
     @FXML
     private TextField txtIdOrden;
 
+    /** Campo para ingresar el identificador del proveedor. */
     @FXML
     private TextField txtIdProveedor;
 
+    /** Campo para ingresar la fecha de la orden. */
     @FXML
     private TextField txtFecha;
 
+    /** Campo para ingresar el identificador del producto. */
     @FXML
     private TextField txtIdProducto;
 
+    /** Campo para ingresar la cantidad del producto. */
     @FXML
     private TextField txtCantidad;
 
+    /** Campo para ingresar el costo unitario del producto. */
     @FXML
     private TextField txtCostoUnitario;
 
+    /** Tabla que muestra las órdenes de compra registradas. */
     @FXML
     private TableView<OrdenCompra> tablaCompras;
 
+    /** Columna que muestra el identificador de la orden. */
     @FXML
     private TableColumn<OrdenCompra, String> colIdOrden;
 
+    /** Columna que muestra el identificador del proveedor. */
     @FXML
     private TableColumn<OrdenCompra, String> colIdProveedor;
 
+    /** Columna que muestra la fecha de la orden. */
     @FXML
     private TableColumn<OrdenCompra, String> colFecha;
 
+    /** Columna que muestra el estado de la orden. */
     @FXML
     private TableColumn<OrdenCompra, String> colEstado;
 
+    /** Tabla que muestra los detalles de la orden que se está creando. */
     @FXML
     private TableView<DetalleCompra> tablaDetalles;
 
+    /** Columna que muestra el identificador del producto. */
     @FXML
     private TableColumn<DetalleCompra, String> colIdProducto;
 
+    /** Columna que muestra la cantidad solicitada. */
     @FXML
     private TableColumn<DetalleCompra, Integer> colCantidad;
 
+    /** Columna que muestra el costo unitario. */
     @FXML
     private TableColumn<DetalleCompra, Double> colCostoUnitario;
 
+    /** Columna que muestra el subtotal del detalle. */
     @FXML
     private TableColumn<DetalleCompra, Double> colSubtotal;
 
+    /** Servicio encargado de gestionar las órdenes de compra. */
     private final CompraService servicio = new CompraService();
 
+    /** Lista observable utilizada para mostrar las órdenes en la tabla. */
     private ObservableList<OrdenCompra> listaCompras;
 
+    /**
+     * Lista temporal de detalles de la orden que se está creando.
+     *
+     * Los detalles se almacenan aquí antes de registrar la orden
+     * completa mediante el servicio.
+     */
     private final ObservableList<DetalleCompra> listaDetalles =
             FXCollections.observableArrayList();
 
+    /**
+     * Inicializa el controlador.
+     *
+     * Configura las columnas de las tablas, establece la lista
+     * temporal de detalles y carga las órdenes almacenadas.
+     */
     @FXML
     public void initialize() {
 
@@ -96,6 +135,11 @@ public class CompraController {
         colCostoUnitario.setCellValueFactory(
                 new PropertyValueFactory<>("costoUnitario"));
 
+        /*
+         * El subtotal no es un atributo almacenado directamente.
+         * Se calcula a partir de la cantidad y el costo unitario
+         * de cada detalle.
+         */
         colSubtotal.setCellValueFactory(
                 datos -> new SimpleObjectProperty<>(
                         datos.getValue().calcularSubtotal()
@@ -109,6 +153,9 @@ public class CompraController {
 
     /**
      * Carga las órdenes de compra almacenadas.
+     *
+     * Obtiene las órdenes mediante el servicio y las coloca
+     * en la tabla correspondiente.
      */
     private void cargarDatos() {
 
@@ -121,7 +168,10 @@ public class CompraController {
     }
 
     /**
-     * Agrega un detalle temporalmente a la orden que se está creando.
+     * Agrega un detalle a la orden que se está creando.
+     *
+     * El detalle permanece temporalmente en la lista hasta que
+     * el usuario registra la orden completa.
      */
     @FXML
     public void agregarDetalle() {
@@ -163,6 +213,10 @@ public class CompraController {
 
             listaDetalles.add(detalle);
 
+            /*
+             * Se limpian solamente los campos del detalle,
+             * permitiendo ingresar otro producto a la misma orden.
+             */
             txtIdProducto.clear();
             txtCantidad.clear();
             txtCostoUnitario.clear();
@@ -178,7 +232,9 @@ public class CompraController {
     /**
      * Registra una nueva orden de compra.
      *
-     * El servicio se encarga de establecer el estado Pendiente.
+     * La orden se crea inicialmente en estado Pendiente.
+     * Las validaciones y reglas de negocio son realizadas
+     * por el {@link CompraService}.
      */
     @FXML
     public void guardarCompra() {
@@ -212,12 +268,15 @@ public class CompraController {
             return;
         }
 
+        /*
+         * Se crea una copia de la lista temporal para que la
+         * orden tenga sus propios detalles.
+         */
         List<DetalleCompra> detalles =
                 new ArrayList<>(listaDetalles);
 
         /*
-         * El estado se coloca inicialmente como Pendiente
-         * dentro del servicio.
+         * El estado inicial de una orden nueva es Pendiente.
          */
         OrdenCompra nueva =
                 new OrdenCompra(
@@ -248,8 +307,8 @@ public class CompraController {
     /**
      * Marca como recibida la orden seleccionada.
      *
-     * El servicio registra las entradas correspondientes
-     * en el inventario.
+     * El servicio se encarga de cambiar el estado de la orden
+     * y registrar las entradas correspondientes en el inventario.
      */
     @FXML
     public void recibirCompra() {
@@ -285,9 +344,11 @@ public class CompraController {
     }
 
     /**
-     * Cancela la orden seleccionada.
+     * Cancela la orden de compra seleccionada.
      *
-     * Una compra cancelada no modifica el inventario.
+     * Una orden cancelada no modifica el inventario.
+     * El servicio se encarga de validar que la transición
+     * de estado sea permitida.
      */
     @FXML
     public void cancelarCompra() {
@@ -324,6 +385,9 @@ public class CompraController {
 
     /**
      * Limpia los campos utilizados para registrar una nueva orden.
+     *
+     * También elimina los detalles que todavía no hayan sido
+     * registrados dentro de una orden.
      */
     private void limpiarCampos() {
 

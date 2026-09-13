@@ -15,55 +15,77 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.util.Optional;
 
 /**
- * Controlador de la vista de gestión de proveedores.
+ * Controlador de la pantalla de gestión de proveedores.
  *
  * Permite registrar, modificar, consultar y eliminar proveedores.
+ *
+ * La lógica de negocio se delega al {@link ProveedorService}.
+ * El controlador se encarga de conectar la interfaz gráfica
+ * con el servicio correspondiente.
  */
 public class ProveedorController {
 
+    /** Campo para ingresar el identificador del proveedor. */
     @FXML
     private TextField txtId;
 
+    /** Campo para ingresar el nombre del proveedor. */
     @FXML
     private TextField txtNombre;
 
+    /** Campo para ingresar la persona de contacto. */
     @FXML
     private TextField txtContacto;
 
+    /** Campo para ingresar el número telefónico. */
     @FXML
     private TextField txtTelefono;
 
+    /** Campo para ingresar el correo electrónico. */
     @FXML
     private TextField txtCorreo;
 
+    /** Tabla que muestra los proveedores registrados. */
     @FXML
     private TableView<Proveedor> tablaProveedores;
 
+    /** Columna que muestra el identificador del proveedor. */
     @FXML
     private TableColumn<Proveedor, String> colId;
 
+    /** Columna que muestra el nombre del proveedor. */
     @FXML
     private TableColumn<Proveedor, String> colNombre;
 
+    /** Columna que muestra la persona de contacto. */
     @FXML
     private TableColumn<Proveedor, String> colContacto;
 
+    /** Columna que muestra el número telefónico. */
     @FXML
     private TableColumn<Proveedor, String> colTelefono;
 
+    /** Columna que muestra el correo electrónico. */
     @FXML
     private TableColumn<Proveedor, String> colCorreo;
 
+    /** Servicio encargado de gestionar los proveedores. */
     private final ProveedorService proveedorService =
             new ProveedorService();
 
+    /** Lista observable utilizada para mostrar los proveedores en la tabla. */
     private ObservableList<Proveedor> listaProveedores;
 
     /**
-     * Inicializa la tabla y carga los proveedores registrados.
+     * Inicializa el controlador.
+     *
+     * Configura las columnas de la tabla, carga los proveedores
+     * registrados y establece el evento que permite seleccionar
+     * un proveedor para cargar sus datos en el formulario.
      */
     @FXML
     public void initialize() {
+
         colId.setCellValueFactory(
                 new PropertyValueFactory<>("id")
         );
@@ -88,36 +110,47 @@ public class ProveedorController {
 
         /*
          * Cuando se selecciona un proveedor de la tabla,
-         * sus datos se cargan automáticamente en los campos.
+         * sus datos se cargan automáticamente en el formulario.
          */
         tablaProveedores.getSelectionModel()
                 .selectedItemProperty()
-                .addListener((observable, anterior, seleccionado) -> {
+                .addListener(
+                        (observable, anterior, seleccionado) -> {
 
-                    if (seleccionado != null) {
-                        cargarProveedorSeleccionado(seleccionado);
-                    }
-                });
+                            if (seleccionado != null) {
+                                cargarProveedorSeleccionado(
+                                        seleccionado
+                                );
+                            }
+                        }
+                );
     }
 
     /**
-     * Carga todos los proveedores desde el servicio.
+     * Carga todos los proveedores registrados desde el servicio
+     * y los muestra en la tabla.
      */
     private void cargarDatos() {
-        listaProveedores = FXCollections.observableArrayList(
-                proveedorService.obtenerProveedores()
-        );
+
+        listaProveedores =
+                FXCollections.observableArrayList(
+                        proveedorService.obtenerProveedores()
+                );
 
         tablaProveedores.setItems(listaProveedores);
     }
 
     /**
-     * Registra un nuevo proveedor.
+     * Registra un nuevo proveedor utilizando los datos
+     * ingresados en el formulario.
      */
     @FXML
     public void guardarProveedor() {
+
         try {
-            Proveedor nuevo = obtenerProveedorDeCampos();
+
+            Proveedor nuevo =
+                    obtenerProveedorDeCampos();
 
             proveedorService.registrarProveedor(nuevo);
 
@@ -129,6 +162,7 @@ public class ProveedorController {
             limpiarCampos();
 
         } catch (Exception e) {
+
             mostrarError(e.getMessage());
         }
     }
@@ -136,29 +170,38 @@ public class ProveedorController {
     /**
      * Modifica el proveedor seleccionado en la tabla.
      *
-     * El ID se conserva y solamente se actualizan los demás datos.
+     * El identificador del proveedor se conserva y solamente
+     * se actualizan sus demás datos.
      */
     @FXML
     public void modificarProveedor() {
+
         try {
+
             Proveedor seleccionado =
-                    tablaProveedores.getSelectionModel().getSelectedItem();
+                    tablaProveedores
+                            .getSelectionModel()
+                            .getSelectedItem();
 
             if (seleccionado == null) {
+
                 throw new IllegalArgumentException(
                         "Debe seleccionar un proveedor de la tabla."
                 );
             }
 
-            Proveedor actualizado = new Proveedor(
-                    seleccionado.getId(),
-                    txtNombre.getText(),
-                    txtContacto.getText(),
-                    txtTelefono.getText(),
-                    txtCorreo.getText()
-            );
+            Proveedor actualizado =
+                    new Proveedor(
+                            seleccionado.getId(),
+                            txtNombre.getText(),
+                            txtContacto.getText(),
+                            txtTelefono.getText(),
+                            txtCorreo.getText()
+                    );
 
-            proveedorService.actualizarProveedor(actualizado);
+            proveedorService.actualizarProveedor(
+                    actualizado
+            );
 
             mostrarInformacion(
                     "Proveedor modificado correctamente."
@@ -168,32 +211,43 @@ public class ProveedorController {
             limpiarCampos();
 
         } catch (Exception e) {
+
             mostrarError(e.getMessage());
         }
     }
 
     /**
      * Elimina el proveedor seleccionado en la tabla.
+     *
+     * Antes de eliminarlo, solicita una confirmación al usuario.
      */
     @FXML
     public void eliminarProveedor() {
+
         try {
+
             Proveedor seleccionado =
-                    tablaProveedores.getSelectionModel().getSelectedItem();
+                    tablaProveedores
+                            .getSelectionModel()
+                            .getSelectedItem();
 
             if (seleccionado == null) {
+
                 throw new IllegalArgumentException(
                         "Debe seleccionar un proveedor de la tabla."
                 );
             }
 
-            Alert confirmacion = new Alert(
-                    Alert.AlertType.CONFIRMATION,
-                    "¿Está seguro de eliminar al proveedor "
-                            + seleccionado.getNombre() + "?"
-            );
+            Alert confirmacion =
+                    new Alert(
+                            Alert.AlertType.CONFIRMATION,
+                            "¿Está seguro de eliminar al proveedor "
+                                    + seleccionado.getNombre() + "?"
+                    );
 
-            confirmacion.setHeaderText("Eliminar proveedor");
+            confirmacion.setHeaderText(
+                    "Eliminar proveedor"
+            );
 
             Optional<ButtonType> resultado =
                     confirmacion.showAndWait();
@@ -214,18 +268,23 @@ public class ProveedorController {
             }
 
         } catch (Exception e) {
+
             mostrarError(e.getMessage());
         }
     }
 
     /**
-     * Carga los datos del proveedor seleccionado en los campos.
+     * Carga los datos del proveedor seleccionado en los
+     * campos correspondientes del formulario.
      *
-     * El ID se bloquea porque no debe modificarse.
+     * El identificador se bloquea porque no debe modificarse
+     * durante una actualización.
      *
-     * @param proveedor proveedor seleccionado
+     * @param proveedor proveedor seleccionado en la tabla
      */
-    private void cargarProveedorSeleccionado(Proveedor proveedor) {
+    private void cargarProveedorSeleccionado(
+            Proveedor proveedor) {
+
         txtId.setText(proveedor.getId());
         txtNombre.setText(proveedor.getNombre());
         txtContacto.setText(proveedor.getContacto());
@@ -236,11 +295,13 @@ public class ProveedorController {
     }
 
     /**
-     * Obtiene un proveedor utilizando los datos de los campos.
+     * Crea un objeto Proveedor utilizando los datos
+     * ingresados en el formulario.
      *
-     * @return proveedor creado con los datos ingresados
+     * @return proveedor creado con los datos del formulario
      */
     private Proveedor obtenerProveedorDeCampos() {
+
         return new Proveedor(
                 txtId.getText().trim(),
                 txtNombre.getText().trim(),
@@ -252,9 +313,13 @@ public class ProveedorController {
 
     /**
      * Limpia todos los campos del formulario.
+     *
+     * También habilita nuevamente el campo del identificador
+     * y elimina la selección actual de la tabla.
      */
     @FXML
     private void limpiarCampos() {
+
         txtId.clear();
         txtNombre.clear();
         txtContacto.clear();
@@ -263,36 +328,48 @@ public class ProveedorController {
 
         txtId.setDisable(false);
 
-        tablaProveedores.getSelectionModel().clearSelection();
+        tablaProveedores
+                .getSelectionModel()
+                .clearSelection();
     }
 
     /**
-     * Muestra un mensaje de error.
+     * Muestra un mensaje de error al usuario.
      *
      * @param mensaje mensaje que se mostrará
      */
     private void mostrarError(String mensaje) {
-        Alert alerta = new Alert(
-                Alert.AlertType.ERROR,
-                mensaje
+
+        Alert alerta =
+                new Alert(
+                        Alert.AlertType.ERROR,
+                        mensaje
+                );
+
+        alerta.setHeaderText(
+                "No se pudo completar la operación"
         );
 
-        alerta.setHeaderText("No se pudo completar la operación");
         alerta.showAndWait();
     }
 
     /**
-     * Muestra un mensaje informativo.
+     * Muestra un mensaje informativo al usuario.
      *
      * @param mensaje mensaje que se mostrará
      */
     private void mostrarInformacion(String mensaje) {
-        Alert alerta = new Alert(
-                Alert.AlertType.INFORMATION,
-                mensaje
+
+        Alert alerta =
+                new Alert(
+                        Alert.AlertType.INFORMATION,
+                        mensaje
+                );
+
+        alerta.setHeaderText(
+                "Operación completada"
         );
 
-        alerta.setHeaderText("Operación completada");
         alerta.showAndWait();
     }
 }
