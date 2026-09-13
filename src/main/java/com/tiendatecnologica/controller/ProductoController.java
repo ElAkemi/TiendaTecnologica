@@ -166,6 +166,10 @@ public class ProductoController {
             cargarProductos();
             limpiarFormulario();
 
+        } catch (NumberFormatException e) {
+
+            mostrarError("Precio, cantidad, stock mínimo y meses de garantía deben ser números válidos");
+
         } catch (Exception e) {
 
             mostrarError(e.getMessage());
@@ -190,6 +194,10 @@ public class ProductoController {
 
             cargarProductos();
             limpiarFormulario();
+
+        } catch (NumberFormatException e) {
+
+            mostrarError("Precio, cantidad, stock mínimo y meses de garantía deben ser números válidos");
 
         } catch (Exception e) {
 

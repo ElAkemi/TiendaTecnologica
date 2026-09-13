@@ -144,19 +144,18 @@ public class InventarioController {
      */
     @FXML
     public void registrarEntrada() {
-
         try {
-
             inventarioService.registrarEntrada(
                     campoCodigoProducto.getText(),
                     Integer.parseInt(campoCantidad.getText()),
                     campoMotivo.getText()
             );
-
             despuesDeMovimiento();
 
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
+            mostrarError("La cantidad debe ser un número entero válido");
 
+        } catch (Exception e) {
             mostrarError(e.getMessage());
         }
     }
@@ -180,6 +179,10 @@ public class InventarioController {
             );
 
             despuesDeMovimiento();
+
+        } catch (NumberFormatException e) {
+
+            mostrarError("La cantidad debe ser un número entero válido");
 
         } catch (Exception e) {
 
@@ -205,6 +208,10 @@ public class InventarioController {
             );
 
             despuesDeMovimiento();
+
+        } catch (NumberFormatException e) {
+
+            mostrarError("La cantidad debe ser un número entero válido");
 
         } catch (Exception e) {
 
