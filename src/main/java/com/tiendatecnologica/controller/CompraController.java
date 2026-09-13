@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -171,7 +172,10 @@ public class CompraController {
      * Agrega un detalle a la orden que se está creando.
      *
      * El detalle permanece temporalmente en la lista hasta que
-     * el usuario registra la orden completa.
+     * el usuario registra la orden completa. Valida que los
+     * campos no estén vacíos, que la cantidad y el costo sean
+     * numéricos, y que la cantidad sea mayor que 0 y el costo
+     * no sea negativo.
      */
     @FXML
     public void agregarDetalle() {
@@ -189,7 +193,7 @@ public class CompraController {
                 || cantidadTexto.isEmpty()
                 || costoTexto.isEmpty()) {
 
-            System.out.println(
+            mostrarError(
                     "Debe completar todos los datos del producto."
             );
 
@@ -203,6 +207,24 @@ public class CompraController {
 
             double costoUnitario =
                     Double.parseDouble(costoTexto);
+
+            if (cantidad <= 0) {
+
+                mostrarError(
+                        "La cantidad debe ser mayor que 0."
+                );
+
+                return;
+            }
+
+            if (costoUnitario < 0) {
+
+                mostrarError(
+                        "El costo unitario no puede ser negativo."
+                );
+
+                return;
+            }
 
             DetalleCompra detalle =
                     new DetalleCompra(
@@ -223,7 +245,7 @@ public class CompraController {
 
         } catch (NumberFormatException e) {
 
-            System.out.println(
+            mostrarError(
                     "La cantidad debe ser un entero y el costo debe ser numérico."
             );
         }
@@ -252,7 +274,7 @@ public class CompraController {
                 || idProveedor.isEmpty()
                 || fecha.isEmpty()) {
 
-            System.out.println(
+            mostrarError(
                     "Debe completar todos los datos de la orden."
             );
 
@@ -261,7 +283,7 @@ public class CompraController {
 
         if (listaDetalles.isEmpty()) {
 
-            System.out.println(
+            mostrarError(
                     "La orden debe tener al menos un producto."
             );
 
@@ -294,13 +316,9 @@ public class CompraController {
             cargarDatos();
             limpiarCampos();
 
-            System.out.println(
-                    "Compra registrada correctamente como Pendiente."
-            );
-
         } catch (IllegalArgumentException e) {
 
-            System.out.println(e.getMessage());
+            mostrarError(e.getMessage());
         }
     }
 
@@ -318,7 +336,7 @@ public class CompraController {
 
         if (seleccionada == null) {
 
-            System.out.println(
+            mostrarError(
                     "Debe seleccionar una orden de compra."
             );
 
@@ -333,13 +351,9 @@ public class CompraController {
 
             cargarDatos();
 
-            System.out.println(
-                    "Compra marcada como Recibida."
-            );
-
         } catch (IllegalArgumentException e) {
 
-            System.out.println(e.getMessage());
+            mostrarError(e.getMessage());
         }
     }
 
@@ -358,7 +372,7 @@ public class CompraController {
 
         if (seleccionada == null) {
 
-            System.out.println(
+            mostrarError(
                     "Debe seleccionar una orden de compra."
             );
 
@@ -373,13 +387,9 @@ public class CompraController {
 
             cargarDatos();
 
-            System.out.println(
-                    "Compra cancelada correctamente."
-            );
-
         } catch (IllegalArgumentException e) {
 
-            System.out.println(e.getMessage());
+            mostrarError(e.getMessage());
         }
     }
 
@@ -400,5 +410,24 @@ public class CompraController {
         txtCostoUnitario.clear();
 
         listaDetalles.clear();
+    }
+
+    /**
+     * Muestra un mensaje de error al usuario.
+     *
+     * @param mensaje mensaje que se mostrará
+     */
+    private void mostrarError(String mensaje) {
+
+        Alert alerta = new Alert(
+                Alert.AlertType.ERROR,
+                mensaje
+        );
+
+        alerta.setHeaderText(
+                "No se pudo completar la operación"
+        );
+
+        alerta.showAndWait();
     }
 }

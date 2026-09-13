@@ -4,130 +4,74 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="10"
-      alignment="TOP_LEFT"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.tiendatecnologica.controller.CompraController">
+<ScrollPane fitToWidth="true"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.tiendatecnologica.controller.CompraController">
 
-    <padding>
-        <Insets top="20"
-                right="20"
-                bottom="20"
-                left="20"/>
-    </padding>
+    <VBox spacing="10" alignment="TOP_LEFT">
 
-    <Label text="Gestión de Órdenes de Compra"
-           style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
 
-    <!-- Datos de la orden -->
-    <Label text="Datos de la Orden"
-           style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+        <Label text="Gestión de Órdenes de Compra"
+               style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
-    <HBox spacing="10">
+        <!-- Datos de la orden -->
+        <Label text="Datos de la Orden"
+               style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
 
-        <TextField fx:id="txtIdOrden"
-                   promptText="ID Orden"/>
+        <HBox spacing="10">
+            <TextField fx:id="txtIdOrden" promptText="ID Orden"/>
+            <TextField fx:id="txtIdProveedor" promptText="ID Proveedor"/>
+            <TextField fx:id="txtFecha" promptText="Fecha (AAAA-MM-DD)"/>
+        </HBox>
 
-        <TextField fx:id="txtIdProveedor"
-                   promptText="ID Proveedor"/>
+        <!-- Datos del detalle -->
+        <Label text="Productos de la Orden"
+               style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
 
-        <TextField fx:id="txtFecha"
-                   promptText="Fecha (AAAA-MM-DD)"/>
+        <HBox spacing="10">
+            <TextField fx:id="txtIdProducto" promptText="ID Producto"/>
+            <TextField fx:id="txtCantidad" promptText="Cantidad"/>
+            <TextField fx:id="txtCostoUnitario" promptText="Costo Unitario"/>
+            <Button text="Agregar Producto" onAction="#agregarDetalle"/>
+        </HBox>
 
-    </HBox>
+        <!-- Tabla de detalles -->
+        <TableView fx:id="tablaDetalles" prefHeight="200" minHeight="200">
+            <columns>
+                <TableColumn fx:id="colIdProducto" text="ID Producto" prefWidth="120"/>
+                <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="100"/>
+                <TableColumn fx:id="colCostoUnitario" text="Costo Unitario" prefWidth="130"/>
+                <TableColumn fx:id="colSubtotal" text="Subtotal" prefWidth="120"/>
+            </columns>
+        </TableView>
 
-    <!-- Datos del detalle -->
-    <Label text="Productos de la Orden"
-           style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+        <!-- Registrar orden -->
+        <HBox spacing="10">
+            <Button text="Registrar Orden" onAction="#guardarCompra"/>
+        </HBox>
 
-    <HBox spacing="10">
+        <!-- Órdenes existentes -->
+        <Label text="Órdenes Registradas"
+               style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
 
-        <TextField fx:id="txtIdProducto"
-                   promptText="ID Producto"/>
+        <TableView fx:id="tablaCompras" prefHeight="220" minHeight="180">
+            <columns>
+                <TableColumn fx:id="colIdOrden" text="ID Orden" prefWidth="100"/>
+                <TableColumn fx:id="colIdProveedor" text="ID Proveedor" prefWidth="120"/>
+                <TableColumn fx:id="colFecha" text="Fecha" prefWidth="120"/>
+                <TableColumn fx:id="colEstado" text="Estado" prefWidth="120"/>
+            </columns>
+        </TableView>
 
-        <TextField fx:id="txtCantidad"
-                   promptText="Cantidad"/>
+        <!-- Acciones sobre la orden seleccionada -->
+        <HBox spacing="10">
+            <Button text="Marcar como Recibida" onAction="#recibirCompra"/>
+            <Button text="Cancelar Compra" onAction="#cancelarCompra"/>
+        </HBox>
 
-        <TextField fx:id="txtCostoUnitario"
-                   promptText="Costo Unitario"/>
+    </VBox>
 
-        <Button text="Agregar Producto"
-                onAction="#agregarDetalle"/>
-
-    </HBox>
-
-    <!-- Tabla de detalles -->
-    <TableView fx:id="tablaDetalles"
-               prefHeight="180">
-
-        <columns>
-
-            <TableColumn fx:id="colIdProducto"
-                         text="ID Producto"
-                         prefWidth="120"/>
-
-            <TableColumn fx:id="colCantidad"
-                         text="Cantidad"
-                         prefWidth="100"/>
-
-            <TableColumn fx:id="colCostoUnitario"
-                         text="Costo Unitario"
-                         prefWidth="130"/>
-
-            <TableColumn fx:id="colSubtotal"
-                         text="Subtotal"
-                         prefWidth="120"/>
-
-        </columns>
-
-    </TableView>
-
-    <!-- Registrar orden -->
-    <HBox spacing="10">
-
-        <Button text="Registrar Orden"
-                onAction="#guardarCompra"/>
-
-    </HBox>
-
-    <!-- Órdenes existentes -->
-    <Label text="Órdenes Registradas"
-           style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
-
-    <TableView fx:id="tablaCompras"
-               VBox.vgrow="ALWAYS">
-
-        <columns>
-
-            <TableColumn fx:id="colIdOrden"
-                         text="ID Orden"
-                         prefWidth="100"/>
-
-            <TableColumn fx:id="colIdProveedor"
-                         text="ID Proveedor"
-                         prefWidth="120"/>
-
-            <TableColumn fx:id="colFecha"
-                         text="Fecha"
-                         prefWidth="120"/>
-
-            <TableColumn fx:id="colEstado"
-                         text="Estado"
-                         prefWidth="120"/>
-
-        </columns>
-
-    </TableView>
-
-    <!-- Acciones sobre la orden seleccionada -->
-    <HBox spacing="10">
-
-        <Button text="Marcar como Recibida"
-                onAction="#recibirCompra"/>
-
-        <Button text="Cancelar Compra"
-                onAction="#cancelarCompra"/>
-
-    </HBox>
-
-</VBox>
+</ScrollPane>

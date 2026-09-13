@@ -41,7 +41,7 @@ public class Main extends Application {
          * Crea la escena utilizando la vista principal
          * y establece sus dimensiones iniciales.
          */
-        Scene scene = new Scene(root, 900, 600);
+        Scene scene = new Scene(root, 900, 700);
 
         /*
          * Carga y aplica la hoja de estilos CSS de la aplicación.
