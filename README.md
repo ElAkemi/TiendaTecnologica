@@ -18,8 +18,8 @@ TiendaTecnologica/
 ├── data/                          # Archivos CSV para persistencia de datos
 │   ├── clientes.csv
 │   ├── compras.csv
-│   ├── detalle_compras.csv
 │   ├── detalle_ventas.csv
+│   ├── detalle_compras.csv
 │   ├── devoluciones.csv
 │   ├── garantias.csv
 │   ├── movimientos.csv
@@ -30,44 +30,54 @@ TiendaTecnologica/
 │   └── main/
 │       ├── java/com/tiendatecnologica/
 │       │   ├── controller/        # Controladores JavaFX (Interfaz gráfica)
-│       │   │   ├── ClientesController.java
-│       │   │   ├── ComprasController.java
-│       │   │   ├── DevolucionesController.java
-│       │   │   ├── GarantiasController.java
+│       │   │   ├── CompraController.java
+│       │   │   ├── DevolucionController.java
+│       │   │   ├── GarantiaController.java
 │       │   │   ├── InventarioController.java
 │       │   │   ├── MainController.java
-│       │   │   ├── ProductosController.java
-│       │   │   ├── ProveedoresController.java
-│       │   │   ├── ReportesController.java
-│       │   │   └── VentasController.java
+│       │   │   ├── ProductoController.java
+│       │   │   ├── ProveedorController.java
+│       │   │   ├── ReporteController.java
+│       │   │   └── VentaController.java
 │       │   ├── enums/             # Enumeraciones del sistema
-│       │   │   ├── CategoriaProducto.java
+│       │   │   ├── EstadoDevolucion.java
 │       │   │   ├── EstadoGarantia.java
+│       │   │   ├── EstadoOrdenCompra.java
 │       │   │   ├── EstadoVenta.java
 │       │   │   ├── MetodoPago.java
 │       │   │   └── TipoMovimiento.java
 │       │   ├── model/             # Entidades y modelos de dominio
+│       │   │   ├── AjusteInventario.java
 │       │   │   ├── Cliente.java
-│       │   │   ├── Compra.java
 │       │   │   ├── DetalleCompra.java
 │       │   │   ├── DetalleVenta.java
 │       │   │   ├── Devolucion.java
+│       │   │   ├── EntradaInventario.java
 │       │   │   ├── Garantia.java
+│       │   │   ├── Compra.java
 │       │   │   ├── MovimientoInventario.java
+│       │   │   ├── OrdenCompra.java
+│       │   │   ├── Pago.java
 │       │   │   ├── Producto.java
+│       │   │   ├── ProductoVendido.java
 │       │   │   ├── Proveedor.java
+│       │   │   ├── SalidaInventario.java
 │       │   │   └── Venta.java
 │       │   ├── persistence/       # Lectores, escritores y parseo de archivos CSV
 │       │   │   ├── CsvReader.java
 │       │   │   └── CsvWriter.java
 │       │   ├── repository/        # Acceso a datos (Patrón Repository)
 │       │   │   ├── ClienteRepository.java
-│       │   │   ├── CompraRepository.java
+│       │   │   ├── CsvRepository.java
+│       │   │   ├── DetalleVentaRepository.java
 │       │   │   ├── DevolucionRepository.java
 │       │   │   ├── GarantiaRepository.java
-│       │   │   ├── MovimientoRepository.java
+│       │   │   ├── InventarioRepository.java
+│       │   │   ├── OrdenCompraRepository.java
 │       │   │   ├── ProductoRepository.java
 │       │   │   ├── ProveedorRepository.java
+│       │   │   ├── RegistroRepository.java
+│       │   │   ├── Repository.java
 │       │   │   └── VentaRepository.java
 │       │   ├── service/           # Capa de lógica de negocio
 │       │   │   ├── ClienteService.java
@@ -80,15 +90,14 @@ TiendaTecnologica/
 │       │   │   ├── ReporteService.java
 │       │   │   └── VentaService.java
 │       │   ├── util/              # Clases auxiliares y validaciones
-│       │   │   ├── IdGenerator.java
-│       │   │   ├── ValidationUtils.java
-│       │   │   └── ViewSwitcher.java
+│       │   │   ├── GeneradorId.java
+│       │   │   ├── Constantes.java
+│       │   │   └── Validador.java
 │       │   └── Main.java          # Clase principal / Punto de entrada
 │       └── resources/
 │           ├── css/               # Hojas de estilo
 │           │   └── styles.css
 │           └── fxml/               # Vistas en XML para JavaFX
-│               ├── clientes.fxml
 │               ├── compras.fxml
 │               ├── devoluciones.fxml
 │               ├── garantias.fxml
