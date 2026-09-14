@@ -1,24 +1,21 @@
-# Tienda Tecnologica - Sistema de Gestion de Inventario y Ventas
+# Tienda Tecnológica - Sistema de Gestión de Inventario y Ventas
 
-Sistema de escritorio desarrollado en JavaFX para la gestion integral de una tienda de tecnologia. La aplicacion implementa una arquitectura por capas (MVC / Servicio-Repositorio) y utiliza archivos en formato CSV para la persistencia de datos.
+Sistema de escritorio desarrollado en JavaFX para la gestión integral de una tienda de tecnología. La aplicación implementa una arquitectura por capas (MVC / Servicio-Repositorio) y utiliza archivos en formato CSV para la persistencia de datos.
 
----
+## Características Principales
 
-## Caracteristicas Principales
-
-- Gestion de Productos y Proveedores: Registro, edicion y catalogo de productos tecnologicos y sus respectivos proveedores.
-- Control de Inventarios: Movimientos de entrada, salida y ajustes de stock en tiempo real.
-- Gestion de Ventas y Compras: Procesamiento de transacciones comerciales con clientes y ordenes de compra con proveedores.
-- Garantias y Devoluciones: Seguimiento del ciclo de vida de garantias de productos y gestion de devoluciones con actualizacion de estados.
-- Generacion de Reportes: Modulo dedicado para la emision de reportes y estadisticas operativas.
-- Persistencia en CSV: Almacenamiento rapido y liviano sin necesidad de configurar bases de datos relacionales complejas.
-
----
+- **Gestión de Productos y Proveedores:** Registro, edición y catálogo de productos tecnológicos y sus respectivos proveedores.
+- **Control de Inventarios:** Movimientos de entrada, salida y ajustes de stock en tiempo real.
+- **Gestión de Ventas y Compras:** Procesamiento de transacciones comerciales con clientes y órdenes de compra con proveedores.
+- **Garantías y Devoluciones:** Seguimiento del ciclo de vida de garantías de productos y gestión de devoluciones con actualización de estados.
+- **Generación de Reportes:** Módulo dedicado para la emisión de reportes y estadísticas operativas.
+- **Persistencia en CSV:** Almacenamiento rápido y liviano sin necesidad de configurar bases de datos relacionales complejas.
 
 ## Estructura del Proyecto
 
+```
 TiendaTecnologica/
-├── data/                            # Archivos CSV para persistencia de datos
+├── data/                          # Archivos CSV para persistencia de datos
 │   ├── clientes.csv
 │   ├── compras.csv
 │   ├── detalle_compras.csv
@@ -32,7 +29,7 @@ TiendaTecnologica/
 ├── src/
 │   └── main/
 │       ├── java/com/tiendatecnologica/
-│       │   ├── controller/          # Controladores JavaFX (Interfaz grafica)
+│       │   ├── controller/        # Controladores JavaFX (Interfaz gráfica)
 │       │   │   ├── ClientesController.java
 │       │   │   ├── ComprasController.java
 │       │   │   ├── DevolucionesController.java
@@ -43,13 +40,13 @@ TiendaTecnologica/
 │       │   │   ├── ProveedoresController.java
 │       │   │   ├── ReportesController.java
 │       │   │   └── VentasController.java
-│       │   ├── enums/               # Enumeraciones del sistema
+│       │   ├── enums/             # Enumeraciones del sistema
 │       │   │   ├── CategoriaProducto.java
 │       │   │   ├── EstadoGarantia.java
 │       │   │   ├── EstadoVenta.java
 │       │   │   ├── MetodoPago.java
 │       │   │   └── TipoMovimiento.java
-│       │   ├── model/               # Entidades y modelos de dominio
+│       │   ├── model/             # Entidades y modelos de dominio
 │       │   │   ├── Cliente.java
 │       │   │   ├── Compra.java
 │       │   │   ├── DetalleCompra.java
@@ -60,10 +57,10 @@ TiendaTecnologica/
 │       │   │   ├── Producto.java
 │       │   │   ├── Proveedor.java
 │       │   │   └── Venta.java
-│       │   ├── persistence/         # Lectores, escritores y parseo de archivos CSV
+│       │   ├── persistence/       # Lectores, escritores y parseo de archivos CSV
 │       │   │   ├── CsvReader.java
 │       │   │   └── CsvWriter.java
-│       │   ├── repository/          # Acceso a datos (Patron Repository)
+│       │   ├── repository/        # Acceso a datos (Patrón Repository)
 │       │   │   ├── ClienteRepository.java
 │       │   │   ├── CompraRepository.java
 │       │   │   ├── DevolucionRepository.java
@@ -72,7 +69,7 @@ TiendaTecnologica/
 │       │   │   ├── ProductoRepository.java
 │       │   │   ├── ProveedorRepository.java
 │       │   │   └── VentaRepository.java
-│       │   ├── service/             # Capa de logica de negocio
+│       │   ├── service/           # Capa de lógica de negocio
 │       │   │   ├── ClienteService.java
 │       │   │   ├── CompraService.java
 │       │   │   ├── DevolucionService.java
@@ -82,15 +79,15 @@ TiendaTecnologica/
 │       │   │   ├── ProveedorService.java
 │       │   │   ├── ReporteService.java
 │       │   │   └── VentaService.java
-│       │   ├── util/                # Clases auxiliares y validaciones
+│       │   ├── util/              # Clases auxiliares y validaciones
 │       │   │   ├── IdGenerator.java
 │       │   │   ├── ValidationUtils.java
 │       │   │   └── ViewSwitcher.java
-│       │   └── Main.java            # Clase principal / Punto de entrada
+│       │   └── Main.java          # Clase principal / Punto de entrada
 │       └── resources/
-│           ├── css/                 # Hojas de estilo
+│           ├── css/               # Hojas de estilo
 │           │   └── styles.css
-│           └── fxml/                # Vistas en XML para JavaFX
+│           └── fxml/               # Vistas en XML para JavaFX
 │               ├── clientes.fxml
 │               ├── compras.fxml
 │               ├── devoluciones.fxml
@@ -101,47 +98,47 @@ TiendaTecnologica/
 │               ├── proveedores.fxml
 │               ├── reportes.fxml
 │               └── ventas.fxml
-├── pom.xml                          # Archivo de configuracion Maven
+├── pom.xml                        # Archivo de configuración Maven
 └── README.md
+```
 
----
+## Tecnologías Utilizadas
 
-## Tecnologias Utilizadas
-
-- Lenguaje: Java 17 (o superior)
-- Interfaz Grafica: JavaFX (FXML y CSS)
-- Gestor de Dependencias y Construccion: Apache Maven
-- Persistencia: Archivos de texto plano (.csv)
-
----
+- **Lenguaje:** Java 17 (o superior)
+- **Interfaz Gráfica:** JavaFX (FXML y CSS)
+- **Gestor de Dependencias y Construcción:** Apache Maven
+- **Persistencia:** Archivos de texto plano (.csv)
 
 ## Requisitos Previos
 
 - JDK 17 o superior instalado y configurado en el sistema.
-- Maven instalado (o hacer uso del wrapper incluido ./mvnw).
-- Opcional: Scene Builder para la edicion grafica de las vistas .fxml.
+- Maven instalado (o hacer uso del wrapper incluido `./mvnw`).
+- Opcional: Scene Builder para la edición gráfica de las vistas `.fxml`.
 
----
+## Instalación y Ejecución
 
-## Instalacion y Ejecucion
-
-1. Clonar el repositorio:
+1. **Clonar el repositorio:**
+   ```bash
    git clone https://github.com/ElAkemi/TiendaTecnologica.git
    cd TiendaTecnologica
+   ```
 
-2. Compilar el proyecto con Maven:
+2. **Compilar el proyecto con Maven:**
+   ```bash
    ./mvnw clean compile
+   ```
 
-3. Ejecutar la aplicacion:
+3. **Ejecutar la aplicación:**
+   ```bash
    ./mvnw javafx:run
-
----
+   ```
 
 ## Modelo de Datos (Archivos CSV)
 
-Los datos del sistema se gestionan automaticamente en el directorio data/:
-- productos.csv y proveedores.csv: Catalogo base.
-- ventas.csv y detalle_ventas.csv: Registro de ventas e items vendidos.
-- compras.csv y detalle_compras.csv: Registro de ordenes de compra.
-- movimientos.csv: Historico de cambios en el inventario.
-- garantias.csv y devoluciones.csv: Seguimiento posventa.
+Los datos del sistema se gestionan automáticamente en el directorio `data/`:
+
+- `productos.csv` y `proveedores.csv`: Catálogo base.
+- `ventas.csv` y `detalle_ventas.csv`: Registro de ventas e ítems vendidos.
+- `compras.csv` y `detalle_compras.csv`: Registro de órdenes de compra.
+- `movimientos.csv`: Histórico de cambios en el inventario.
+- `garantias.csv` y `devoluciones.csv`: Seguimiento posventa.
