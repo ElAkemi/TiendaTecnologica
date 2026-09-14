@@ -9,7 +9,7 @@
             fx:controller="com.tiendatecnologica.controller.ReporteController"
             fitToWidth="true">
 
-    <VBox spacing="16">
+    <VBox spacing="16" styleClass="toolbar">
         <padding>
             <Insets top="10" right="10" bottom="10" left="10"/>
         </padding>

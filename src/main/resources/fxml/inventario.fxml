@@ -9,7 +9,7 @@
             fx:controller="com.tiendatecnologica.controller.InventarioController">
 
     <top>
-        <VBox spacing="10">
+        <VBox spacing="10" styleClass="toolbar">
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>

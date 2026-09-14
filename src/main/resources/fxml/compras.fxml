@@ -8,7 +8,7 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.tiendatecnologica.controller.CompraController">
 
-    <VBox spacing="10" alignment="TOP_LEFT">
+    <VBox spacing="10" alignment="TOP_LEFT" styleClass="toolbar">
 
         <padding>
             <Insets top="20" right="20" bottom="20" left="20"/>
