@@ -358,6 +358,28 @@ public class CompraController {
     }
 
     /**
+     * Elimina de la orden el producto seleccionado en la tabla de detalles.
+     *
+     * El producto solamente se elimina de la lista temporal de la orden
+     * y no afecta ningún archivo CSV ni el inventario, ya que la orden
+     * todavía no ha sido registrada.
+     */
+    @FXML
+    public void eliminarDetalle() {
+
+        DetalleCompra seleccionado =
+                tablaDetalles.getSelectionModel().getSelectedItem();
+
+        if (seleccionado == null) {
+            mostrarError(
+                    "Debe seleccionar un producto de la tabla de detalles."
+            );
+            return;
+        }
+
+        listaDetalles.remove(seleccionado);
+    }
+    /**
      * Cancela la orden de compra seleccionada.
      *
      * Una orden cancelada no modifica el inventario.
