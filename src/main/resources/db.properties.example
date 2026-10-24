@@ -1,0 +1,5 @@
+# Copie este archivo como db.properties (en esta misma carpeta)
+# y escriba SUS datos. db.properties NO se sube a Git.
+db.url=jdbc:mysql://localhost:3306/tienda_tecnologica?allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=America/Costa_Rica
+db.user=tienda_app
+db.password=CAMBIAR_CLAVE
