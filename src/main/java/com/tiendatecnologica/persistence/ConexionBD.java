@@ -19,14 +19,23 @@ import java.util.Properties;
  * Quien la pida debe cerrarla (lo más simple es usar try-with-resources),
  * así varios hilos (por ejemplo los Task de JavaFX) no comparten una
  * misma conexión.
+ *
+ * La configuración se lee la primera vez que se necesita (no al cargar la
+ * clase). Si falta el archivo o la BD no responde, se lanza una
+ * {@link SQLException} normal que los repositorios convierten en un mensaje
+ * para el usuario, en vez de cerrar la aplicación con un error de
+ * inicialización.
  */
 public final class ConexionBD {
 
     /** Nombre del archivo de configuración dentro de resources. */
     private static final String ARCHIVO_CONFIG = "db.properties";
 
-    /** Datos de conexión leídos una sola vez al cargar la clase. */
-    private static final Properties CONFIG = cargarConfiguracion();
+    /** Milisegundos máximos de espera al conectar, para que la UI no se congele si MySQL está apagado. */
+    private static final String TIMEOUT_CONEXION_MS = "5000";
+
+    /** Datos de conexión, leídos una sola vez la primera vez que se piden. */
+    private static Properties config;
 
     private ConexionBD() {
         // Clase utilitaria, no se instancia
@@ -44,14 +53,18 @@ public final class ConexionBD {
      *
      * @return una conexión abierta a MySQL
      * @throws SQLException si no se puede conectar (servidor apagado,
-     *                      usuario o contraseña incorrectos, etc.)
+     *                      usuario o contraseña incorrectos, falta
+     *                      db.properties, etc.)
      */
     public static Connection getConexion() throws SQLException {
-        return DriverManager.getConnection(
-                CONFIG.getProperty("db.url"),
-                CONFIG.getProperty("db.user"),
-                CONFIG.getProperty("db.password")
-        );
+        Properties datos = obtenerConfiguracion();
+
+        Properties info = new Properties();
+        info.setProperty("user", datos.getProperty("db.user", ""));
+        info.setProperty("password", datos.getProperty("db.password", ""));
+        info.setProperty("connectTimeout", TIMEOUT_CONEXION_MS);
+
+        return DriverManager.getConnection(datos.getProperty("db.url"), info);
     }
 
     /**
@@ -72,29 +85,36 @@ public final class ConexionBD {
         }
     }
 
+    /** Devuelve la configuración, leyéndola del classpath la primera vez. */
+    private static synchronized Properties obtenerConfiguracion() throws SQLException {
+        if (config == null) {
+            config = cargarConfiguracion();
+        }
+        return config;
+    }
+
     /**
      * Lee el archivo db.properties desde el classpath.
      *
      * @return las propiedades con los datos de conexión
-     * @throws IllegalStateException si el archivo no existe o no se puede leer
+     * @throws SQLException si el archivo no existe o no se puede leer
      */
-    private static Properties cargarConfiguracion() {
+    private static Properties cargarConfiguracion() throws SQLException {
         Properties props = new Properties();
 
         try (InputStream entrada = ConexionBD.class
                 .getClassLoader().getResourceAsStream(ARCHIVO_CONFIG)) {
 
             if (entrada == null) {
-                throw new IllegalStateException(
+                throw new SQLException(
                         "No se encontró " + ARCHIVO_CONFIG + " en src/main/resources. "
                                 + "Copie db.properties.example como db.properties "
-                                + "y complete sus datos.");
+                                + "y complete sus datos.", "08001");
             }
             props.load(entrada);
 
         } catch (IOException e) {
-            throw new IllegalStateException(
-                    "Error leyendo " + ARCHIVO_CONFIG, e);
+            throw new SQLException("Error leyendo " + ARCHIVO_CONFIG, "08001", e);
         }
         return props;
     }
