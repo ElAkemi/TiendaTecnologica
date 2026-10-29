@@ -1,68 +1,83 @@
 package com.tiendatecnologica.repository;
 
 import com.tiendatecnologica.model.DetalleVenta;
-import com.tiendatecnologica.persistence.CsvReader;
-import com.tiendatecnologica.persistence.CsvWriter;
-import com.tiendatecnologica.util.Constantes;
+import com.tiendatecnologica.persistence.ConexionBD;
 
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Repositorio de líneas de venta (detalle_ventas.csv). Igual que
- * {@code InventarioRepository}, es un historial: una vez facturada una
- * línea no se edita ni se elimina, solo se agrega y se consulta (por eso
- * implementa {@link RegistroRepository} y no {@link Repository}).
- */
 public class DetalleVentaRepository implements RegistroRepository<DetalleVenta> {
 
-    private final CsvReader lector = new CsvReader();
-    private final CsvWriter escritor = new CsvWriter();
+    private static final String COLUMNAS = "id_venta, codigo_producto, cantidad, precio_unitario";
 
-    private static final String[] ENCABEZADO = {
-            "idVenta", "codigoProducto", "cantidad", "precioUnitario"
-    };
-
-    /** {@inheritDoc} */
     @Override
     public List<DetalleVenta> obtenerTodos() {
-        List<DetalleVenta> resultado = new ArrayList<>();
-        for (String[] fila : lector.leer(Constantes.DETALLE_VENTAS_CSV)) {
-            resultado.add(mapearDesdeFila(fila));
+        String sql = "SELECT " + COLUMNAS + " FROM detalle_venta ORDER BY id";
+        List<DetalleVenta> detalles = new ArrayList<>();
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                detalles.add(mapear(rs));
+            }
+        } catch (SQLException e) {
+            throw error("leer los detalles de venta", e);
         }
-        return resultado;
+        return detalles;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void guardar(DetalleVenta detalle) {
-        escritor.agregarLinea(Constantes.DETALLE_VENTAS_CSV, ENCABEZADO, mapearAFila(detalle));
-    }
-
-    /**
-     * Obtiene las líneas de detalle correspondientes a una venta específica.
-     *
-     * @param idVenta id de la venta a filtrar
-     * @return lista de líneas de esa venta, en el orden en que se guardaron
-     */
-    public List<DetalleVenta> obtenerPorVenta(String idVenta) {
-        List<DetalleVenta> resultado = new ArrayList<>();
-        for (DetalleVenta d : obtenerTodos()) {
-            if (d.getIdVenta().equals(idVenta)) {
-                resultado.add(d);
-            }
+        try (Connection con = ConexionBD.getConexion()) {
+            guardar(con, detalle);
+        } catch (SQLException e) {
+            throw error("guardar el detalle de venta", e);
         }
-        return resultado;
     }
 
-    private String[] mapearAFila(DetalleVenta d) {
-        return new String[] {
-                d.getIdVenta(), d.getCodigoProducto(),
-                String.valueOf(d.getCantidad()), String.valueOf(d.getPrecioUnitario())
-        };
+    public void guardar(Connection con, DetalleVenta d) throws SQLException {
+        String sql = "INSERT INTO detalle_venta (" + COLUMNAS + ") VALUES (?,?,?,?)";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, d.getIdVenta());
+            ps.setString(2, d.getCodigoProducto());
+            ps.setInt(3, d.getCantidad());
+            ps.setBigDecimal(4, BigDecimal.valueOf(d.getPrecioUnitario()));
+            ps.executeUpdate();
+        }
     }
 
-    private DetalleVenta mapearDesdeFila(String[] fila) {
-        return new DetalleVenta(fila[0], fila[1], Integer.parseInt(fila[2]), Double.parseDouble(fila[3]));
+    public List<DetalleVenta> obtenerPorVenta(String idVenta) {
+        String sql = "SELECT " + COLUMNAS + " FROM detalle_venta WHERE id_venta = ? ORDER BY id";
+        List<DetalleVenta> detalles = new ArrayList<>();
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, idVenta);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    detalles.add(mapear(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw error("leer el detalle de la venta " + idVenta, e);
+        }
+        return detalles;
+    }
+
+    private DetalleVenta mapear(ResultSet rs) throws SQLException {
+        return new DetalleVenta(
+                rs.getString("id_venta"),
+                rs.getString("codigo_producto"),
+                rs.getInt("cantidad"),
+                rs.getDouble("precio_unitario"));
+    }
+
+    private IllegalStateException error(String accion, SQLException e) {
+        return new IllegalStateException(
+                "Error de base de datos al " + accion + ": " + e.getMessage(), e);
     }
 }
