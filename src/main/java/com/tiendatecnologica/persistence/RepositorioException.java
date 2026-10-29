@@ -25,6 +25,14 @@ public class RepositorioException extends RuntimeException {
     private static final int ERR_DATO_MUY_LARGO = 1406;
     private static final int ERR_FK_HIJO = 1452;
     private static final int ERR_FK_PADRE = 1451;
+
+    //--------------------------------------------------------------------------------
+    // Variantes del mismo error que MySQL devuelve en algunas versiones,
+    // con el mensaje sin el detalle de la restricción.
+    private static final int ERR_FK_HIJO_SIN_DETALLE = 1216;
+    private static final int ERR_FK_PADRE_SIN_DETALLE = 1217;
+    //--------------------------------------------------------------------------------
+
     private static final int ERR_CHECK = 3819;
 
     public RepositorioException(String mensaje, Throwable causa) {
@@ -50,10 +58,10 @@ public class RepositorioException extends RuntimeException {
         switch (e.getErrorCode()) {
             case ERR_DUPLICADO ->
                     detalle = "Ya existe un registro con esos datos (valor duplicado en un campo único).";
-            case ERR_FK_PADRE ->
+            case ERR_FK_PADRE, ERR_FK_PADRE_SIN_DETALLE ->
                     detalle = "No se puede eliminar porque tiene registros relacionados "
                             + "(ventas, compras, movimientos, garantías o devoluciones).";
-            case ERR_FK_HIJO ->
+            case ERR_FK_HIJO, ERR_FK_HIJO_SIN_DETALLE ->
                     detalle = "Hace referencia a un registro que no existe.";
             case ERR_CHECK ->
                     detalle = "Algún valor no es válido (no puede ser negativo).";
