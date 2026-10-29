@@ -4,6 +4,10 @@ import com.tiendatecnologica.model.Proveedor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+//lista para poder hacer los join con proveedor-productos
+import java.util.List;
+
+
 public class ProveedorJDBC_Repository extends JdbcRepository<Proveedor> {
 
     // Nombre de la tabla en MySQL.
@@ -67,5 +71,28 @@ public class ProveedorJDBC_Repository extends JdbcRepository<Proveedor> {
                 rs.getString("contacto"),
                 rs.getString("telefono"),
                 rs.getString("correo"));
+    }
+
+
+    //-------------------------------------------------------------------------------------
+    // JOIN PROVEEDOR-PRODUCTO: consulta de la relación N:M, exclusiva para este caso.
+    // Recibe el código de un producto y retorna los proveedores que lo surten.
+    // Va en ProveedorJDBC_Repository porque devuelve objetos Proveedor y aquí ya existe
+    // mapear(), así no se duplica cómo construir un Proveedor.
+    //-------------------------------------------------------------------------------------
+
+    // Devuelve los proveedores que surten un producto.
+    // Cruza (JOIN) proveedor con la tabla de parejas producto_proveedor:
+    // donde pp.id_proveedor coincide con p.id, y se filtra por el código del producto.
+    // Se pide solo p.* (columnas de proveedor) para que mapear() funcione igual que siempre.
+    // Si el producto no tiene proveedores, devuelve una lista vacía (no null).
+    public List<Proveedor> obtenerPorProducto(String codigoProducto) {
+        return consultar(
+                "SELECT p.* FROM proveedor p "
+                        + "JOIN producto_proveedor pp ON pp.id_proveedor = p.id "
+                        + "WHERE pp.codigo_producto = ? "
+                        + "ORDER BY p.id",
+                "consultar los proveedores del producto",
+                this::mapear, codigoProducto);
     }
 }

@@ -4,7 +4,7 @@ import com.tiendatecnologica.model.Producto;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.List;
 public class ProductoJDBC_Repository extends JdbcRepository<Producto> {
 
     // Aquí va toda la lógica de cómo se envían los datos de Java a la BD (el DAO).
@@ -82,5 +82,29 @@ public class ProductoJDBC_Repository extends JdbcRepository<Producto> {
                 rs.getInt("cantidad_disponible"),
                 rs.getInt("stock_minimo"),
                 rs.getInt("meses_garantia"));
+    }
+
+
+
+    //-------------------------------------------------------------------------------------
+    // JOIN PRODUCTO-PROVEEDOR: consulta de la relación N:M, exclusiva para este caso.
+    // Recibe el id de un proveedor y retorna los productos que surte.
+    // Va en ProductoJDBC_Repository porque devuelve objetos Producto y aquí ya existe
+    // mapear(), así no se duplica cómo construir un Producto.
+    //-------------------------------------------------------------------------------------
+
+
+    // Devuelve los productos que surte un proveedor.
+    // Es simétrico al de proveedor: cruza producto con producto_proveedor,
+    // donde pp.codigo_producto coincide con p.codigo, y se filtra por el id del proveedor.
+    // Si el proveedor no surte productos, devuelve una lista vacía (no null).
+    public List<Producto> obtenerPorProveedor(String idProveedor) {
+        return consultar(
+                "SELECT p.* FROM producto p "
+                        + "JOIN producto_proveedor pp ON pp.codigo_producto = p.codigo "
+                        + "WHERE pp.id_proveedor = ? "
+                        + "ORDER BY p.codigo",
+                "consultar los productos del proveedor",
+                this::mapear, idProveedor);
     }
 }
