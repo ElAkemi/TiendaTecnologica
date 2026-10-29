@@ -78,4 +78,41 @@
         </VBox>
     </right>
 
+
+
+    <!-- CAMBIO ASOCIACIÓN: panel con los proveedores del producto seleccionado.
+         A la izquierda, los proveedores que ya lo surten; a la derecha, el
+         selector para asociar uno nuevo y el botón para quitar el seleccionado. -->
+    <bottom> <!--BOTOOOOOOOOOOOOOOOOOOOOOON (quede traumado en la defensa)-->
+        <VBox spacing="6">
+            <padding>
+                <Insets top="8" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Proveedores del producto seleccionado"
+                   style="-fx-font-weight: bold;"/>
+
+            <HBox spacing="10">
+                <TableView fx:id="tablaProveedoresProducto"
+                           prefHeight="110"
+                           HBox.hgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colProvId" text="ID" prefWidth="100"/>
+                        <TableColumn fx:id="colProvNombre" text="Nombre" prefWidth="200"/>
+                        <TableColumn fx:id="colProvTelefono" text="Teléfono" prefWidth="100"/>
+                    </columns>
+                </TableView>
+
+                <VBox spacing="8" prefWidth="240">
+                    <ComboBox fx:id="comboProveedores"
+                              promptText="Seleccione un proveedor"
+                              maxWidth="Infinity"/>
+                    <HBox spacing="8">
+                        <Button text="Asociar" onAction="#asociarProveedor"/>
+                        <Button text="Quitar seleccionado" onAction="#quitarProveedor"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </bottom>
 </BorderPane>
