@@ -21,6 +21,9 @@ import java.util.List;
  *
  * @param <T> tipo de la entidad que administra el repositorio
  */
+
+//crud generico Solo ejecuta el SQL que le den y ya
+    //como es la base de los demas repositoys llama a jdbs support para poder hacer las funciones sql sin repetir codigo
 public abstract class JdbcRepository<T> extends JdbcSupport implements Repository<T> {
 
     // ------------------------------------------------------------------

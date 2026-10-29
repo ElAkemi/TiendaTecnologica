@@ -1,6 +1,7 @@
 package com.tiendatecnologica.repository;
 
 import com.tiendatecnologica.persistence.ConexionBD;
+//clase para traducir los errores de mysql de codigo a palabras para el usuario
 import com.tiendatecnologica.persistence.RepositorioException;
 
 import java.sql.Connection;
@@ -39,6 +40,8 @@ public abstract class JdbcSupport {
      * @param mapeador convierte cada fila en un objeto
      * @param params  valores de los '?'
      */
+
+    //basicamente hace las consultas select para no repetir la logica en todo el programa
     protected <R> List<R> consultar(String sql, String accion,
                                     Mapeador<R> mapeador, Object... params) {
         List<R> resultado = new ArrayList<>();
@@ -62,6 +65,9 @@ public abstract class JdbcSupport {
      *
      * @return cantidad de filas afectadas
      */
+
+    //sirve para las demas operaciones de sql , INSERT, UPDATE y DELETE , estas se hacen con la logica de ejecutar
+    //y retorna las filas afectadas
     protected int ejecutar(String sql, String accion, Object... params) {
         try (Connection con = ConexionBD.getConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
