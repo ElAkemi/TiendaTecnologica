@@ -144,6 +144,9 @@ public class ProductoController {
                         }
                 );
 
+        // CAMBIO SQL: esta carga inicial ahora consulta MySQL.
+        // cargarProductos() ya tiene su propio try/catch, así que si la base
+        // está apagada se muestra una alerta y la pantalla no se rompe.
         cargarProductos();
     }
 
@@ -172,6 +175,8 @@ public class ProductoController {
 
         } catch (Exception e) {
 
+            // Sin cambios: RepositorioException (errores de MySQL) también cae aquí
+            // y su mensaje ya viene listo para el usuario.
             mostrarError(e.getMessage());
         }
     }
@@ -236,6 +241,8 @@ public class ProductoController {
 
         } catch (Exception e) {
 
+            // Sin cambios: si el producto tiene ventas o compras relacionadas,
+            // MySQL lo rechaza y aquí se muestra el mensaje de RepositorioException.
             mostrarError(e.getMessage());
         }
     }
@@ -249,15 +256,26 @@ public class ProductoController {
     @FXML
     public void buscarProducto() {
 
-        String texto =
-                campoBusqueda.getText();
+        // CAMBIO SQL: los productos ahora vienen de MySQL, así que esta llamada
+        // puede lanzar RepositorioException (por ejemplo, si la base está apagada).
+        // El try/catch evita que la aplicación se cierre y muestra el mensaje.
+        try {
 
-        ObservableList<Producto> resultado =
-                FXCollections.observableArrayList(
-                        productoService.buscarProductos(texto)
-                );
+            String texto =
+                    campoBusqueda.getText();
 
-        tablaProductos.setItems(resultado);
+            ObservableList<Producto> resultado =
+                    FXCollections.observableArrayList(
+                            productoService.buscarProductos(texto)
+                    );
+
+            tablaProductos.setItems(resultado);
+
+        } catch (Exception e) {
+
+            // El mensaje ya viene listo para el usuario desde RepositorioException.
+            mostrarError(e.getMessage());
+        }
     }
 
     /**
@@ -266,12 +284,22 @@ public class ProductoController {
     @FXML
     public void cargarProductos() {
 
-        ObservableList<Producto> productos =
-                FXCollections.observableArrayList(
-                        productoService.listarProductos()
-                );
+        // CAMBIO SQL: antes se leía un CSV local, ahora se consulta la base de datos.
+        // Si la consulta falla, se muestra una alerta en lugar de cerrar la aplicación.
+        // Este método también se llama desde initialize(), así que cubre la carga inicial.
+        try {
 
-        tablaProductos.setItems(productos);
+            ObservableList<Producto> productos =
+                    FXCollections.observableArrayList(
+                            productoService.listarProductos()
+                    );
+
+            tablaProductos.setItems(productos);
+
+        } catch (Exception e) {
+
+            mostrarError(e.getMessage());
+        }
     }
 
     /**
