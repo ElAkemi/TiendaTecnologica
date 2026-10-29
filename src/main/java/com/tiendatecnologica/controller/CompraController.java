@@ -316,7 +316,7 @@ public class CompraController {
             cargarDatos();
             limpiarCampos();
 
-        } catch (IllegalArgumentException e) {
+   } catch (IllegalArgumentException | IllegalStateException e) {
 
             mostrarError(e.getMessage());
         }
@@ -351,7 +351,7 @@ public class CompraController {
 
             cargarDatos();
 
-        } catch (IllegalArgumentException e) {
+     } catch (IllegalArgumentException | IllegalStateException e) {
 
             mostrarError(e.getMessage());
         }
@@ -409,7 +409,7 @@ public class CompraController {
 
             cargarDatos();
 
-        } catch (IllegalArgumentException e) {
+} catch (IllegalArgumentException | IllegalStateException e) {
 
             mostrarError(e.getMessage());
         }
