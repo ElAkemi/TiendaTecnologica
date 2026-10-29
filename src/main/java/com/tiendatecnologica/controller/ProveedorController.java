@@ -106,6 +106,9 @@ public class ProveedorController {
                 new PropertyValueFactory<>("correo")
         );
 
+        // CAMBIO SQL: esta carga inicial ahora consulta MySQL.
+        // cargarDatos() tiene su propio try/catch, así que si la base está
+        // apagada se muestra una alerta y la pantalla no se rompe.
         cargarDatos();
 
         /*
@@ -132,12 +135,22 @@ public class ProveedorController {
      */
     private void cargarDatos() {
 
-        listaProveedores =
-                FXCollections.observableArrayList(
-                        proveedorService.obtenerProveedores()
-                );
+        // CAMBIO SQL: antes se leía un CSV local, ahora se consulta la base de datos.
+        // Si la consulta falla (por ejemplo, MySQL apagado), se muestra una alerta
+        // con el mensaje de RepositorioException en lugar de cerrar la aplicación.
+        try {
 
-        tablaProveedores.setItems(listaProveedores);
+            listaProveedores =
+                    FXCollections.observableArrayList(
+                            proveedorService.obtenerProveedores()
+                    );
+
+            tablaProveedores.setItems(listaProveedores);
+
+        } catch (Exception e) {
+
+            mostrarError(e.getMessage());
+        }
     }
 
     /**
@@ -163,6 +176,8 @@ public class ProveedorController {
 
         } catch (Exception e) {
 
+            // Sin cambios: los errores de MySQL (RepositorioException) también
+            // caen aquí y su mensaje ya viene listo para el usuario.
             mostrarError(e.getMessage());
         }
     }
@@ -255,6 +270,9 @@ public class ProveedorController {
             if (resultado.isPresent()
                     && resultado.get() == ButtonType.OK) {
 
+                // CAMBIO SQL: si el proveedor tiene órdenes de compra, MySQL rechaza
+                // el borrado (clave foránea) y el catch muestra el mensaje claro.
+                // Sus asociaciones con productos se borran solas (ON DELETE CASCADE).
                 proveedorService.eliminarProveedor(
                         seleccionado.getId()
                 );

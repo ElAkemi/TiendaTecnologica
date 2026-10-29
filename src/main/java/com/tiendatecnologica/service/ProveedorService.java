@@ -1,7 +1,8 @@
 package com.tiendatecnologica.service;
 
 import com.tiendatecnologica.model.Proveedor;
-import com.tiendatecnologica.repository.ProveedorRepository;
+// CAMBIO SQL: se importa el repositorio JDBC (MySQL) en lugar del que usa CSV.
+import com.tiendatecnologica.repository.ProveedorJDBC_Repository;
 
 import java.util.List;
 
@@ -13,8 +14,13 @@ import java.util.List;
  */
 public class ProveedorService {
 
-    private final ProveedorRepository proveedorRepository =
-            new ProveedorRepository();
+    // CAMBIO SQL: ahora el service guarda y lee los proveedores en MySQL.
+    // El nombre de la variable se mantiene para no tocar el resto de la clase.
+    private final ProveedorJDBC_Repository proveedorRepository =
+            new ProveedorJDBC_Repository();
+
+    // CAMBIO ID: prefijo con el que se generan los ids (PROV-00001, PROV-00002...).
+    private static final String PREFIJO_ID = "PROV-";
 
     /**
      * Obtiene todos los proveedores registrados.
@@ -28,17 +34,26 @@ public class ProveedorService {
     /**
      * Registra un nuevo proveedor.
      *
-     * @param proveedor proveedor que se desea registrar
+     * El id NO lo digita el usuario: el service lo genera con el siguiente
+     * número libre de la base de datos y se lo asigna al proveedor recibido,
+     * así quien llamó puede leerlo después con {@code proveedor.getId()}.
+     *
+     * @param proveedor proveedor que se desea registrar (sin id)
      */
     public void registrarProveedor(Proveedor proveedor) {
-        validarDatos(proveedor);
+        // CAMBIO ID: antes se validaba el id escrito por el usuario y se revisaba
+        // si ya existía. Ahora solo se valida el nombre, porque el id lo genera
+        // el sistema. Se valida primero para no consultar la base si los datos
+        // ya están mal.
+        validarNombre(proveedor);
 
-        if (proveedorRepository.existe(proveedor.getId())) {
-            throw new IllegalArgumentException(
-                    "Ya existe un proveedor con el ID " + proveedor.getId()
-            );
-        }
+        // CAMBIO ID: siguienteId() consulta el mayor número usado en la tabla
+        // proveedor y devuelve el siguiente con formato PROV-00001.
+        proveedor.setId(proveedorRepository.siguienteId(PREFIJO_ID));
 
+        // Ya no hace falta existe(): el id recién generado no puede estar repetido.
+        // Si por alguna razón lo estuviera, la clave primaria de MySQL lo rechaza
+        // y RepositorioException muestra el mensaje.
         proveedorRepository.guardar(proveedor);
     }
 
@@ -83,20 +98,31 @@ public class ProveedorService {
     }
 
     /**
-     * Valida los datos básicos de un proveedor.
+     * Valida los datos básicos de un proveedor ya existente
+     * (nombre e id obligatorios). Se usa al actualizar.
      *
      * @param proveedor proveedor que se desea validar
      */
     private void validarDatos(Proveedor proveedor) {
-        if (proveedor == null) {
-            throw new IllegalArgumentException(
-                    "El proveedor no puede ser nulo"
-            );
-        }
+        validarNombre(proveedor);
 
         if (proveedor.getId() == null || proveedor.getId().isBlank()) {
             throw new IllegalArgumentException(
                     "El ID del proveedor es obligatorio"
+            );
+        }
+    }
+
+    /**
+     * CAMBIO ID: validación separada solo del proveedor y su nombre.
+     * Se usa al registrar (donde todavía no hay id) y dentro de validarDatos.
+     *
+     * @param proveedor proveedor que se desea validar
+     */
+    private void validarNombre(Proveedor proveedor) {
+        if (proveedor == null) {
+            throw new IllegalArgumentException(
+                    "El proveedor no puede ser nulo"
             );
         }
 

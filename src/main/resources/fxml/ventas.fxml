@@ -14,7 +14,17 @@
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <Label text="Cliente" style="-fx-font-weight: bold;"/>
+
+            <!-- CAMBIO CLIENTES: el título "Cliente" ahora va junto al ComboBox
+                 que lista los clientes ya registrados. Elegir uno evita
+                 tener que buscarlo por cédula cada vez. -->
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="Cliente" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="comboClientes"
+                          promptText="Seleccione un cliente registrado"
+                          prefWidth="360"/>
+            </HBox>
+
             <HBox spacing="8" alignment="CENTER_LEFT">
                 <Label text="Cédula:"/>
                 <TextField fx:id="campoCedulaCliente" promptText="cédula del cliente"/>
