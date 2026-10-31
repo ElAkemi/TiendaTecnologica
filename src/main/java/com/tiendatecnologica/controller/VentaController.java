@@ -85,6 +85,13 @@ public class VentaController {
     @FXML
     private TextField campoEmailCliente;
 
+
+     //CAMBIO CLIENTES: ComboBox con los clientes ya registrados.
+     //Permite elegir un cliente sin tener que buscarlo por cédula.
+    @FXML
+    private ComboBox<Cliente> comboClientes;
+
+
     // --- Carrito ---
 
     /** ComboBox que muestra los productos disponibles. */
@@ -257,6 +264,33 @@ public class VentaController {
         cargarProductos();
 
         /*
+         * CAMBIO CLIENTES: cuando se elige un cliente en el ComboBox, pasa a ser
+         * el cliente de la venta actual. Se copia su cédula al campo de búsqueda
+         * y se muestra su nombre, igual que cuando se encuentra por cédula.
+         * Si el valor es null (por ejemplo, al limpiar la selección), no se hace nada.
+         * Nota: este evento también salta cuando el código cambia la selección,
+         * pero es inofensivo porque siempre deja el mismo estado.
+         */
+        comboClientes.setOnAction(evento -> {
+
+            Cliente elegido = comboClientes.getValue();
+
+            if (elegido != null) {
+
+                clienteActual = elegido;
+
+                campoCedulaCliente.setText(elegido.getCedula());
+
+                labelClienteInfo.setText(
+                        elegido.getNombre()
+                                + " ("
+                                + elegido.getId()
+                                + ")"
+                );
+            }
+        });
+        cargarClientes();
+        /*
          * Cada vez que cambia el monto recibido,
          * se actualiza automáticamente el vuelto.
          */
@@ -290,31 +324,42 @@ public class VentaController {
     @FXML
     public void buscarCliente() {
 
-        String cedula =
-                campoCedulaCliente.getText();
+        // CAMBIO SQL: la búsqueda ahora consulta MySQL, así que lleva try/catch
+        // para que un error de base de datos no cierre la aplicación.
+        try {
 
-        Cliente encontrado =
-                clienteService.buscarPorCedula(cedula);
+            String cedula =
+                    campoCedulaCliente.getText();
 
-        if (encontrado == null) {
+            Cliente encontrado =
+                    clienteService.buscarPorCedula(cedula);
 
-            clienteActual = null;
+            if (encontrado == null) {
 
-            labelClienteInfo.setText(
-                    "No encontrado. Complete los datos y presione "
-                            + "\"Registrar cliente\"."
-            );
+                clienteActual = null;
 
-        } else {
+                // CAMBIO CLIENTES: si no se encontró, se quita cualquier cliente
+                // que estuviera elegido en el combo para que no se preste a confusión.
+                comboClientes.setValue(null);
 
-            clienteActual = encontrado;
+                labelClienteInfo.setText(
+                        "No encontrado. Complete los datos y presione "
+                                + "\"Registrar cliente\"."
+                );
 
-            labelClienteInfo.setText(
-                    encontrado.getNombre()
-                            + " ("
-                            + encontrado.getId()
-                            + ")"
-            );
+            } else {
+
+                clienteActual = encontrado;
+
+                labelClienteInfo.setText(encontrado.getNombre() + " (" + encontrado.getId() + ")");
+
+                // CAMBIO CLIENTES: el cliente encontrado también queda elegido en el combo.
+                seleccionarClienteEnCombo(encontrado.getId());
+            }
+
+        } catch (Exception e) {
+
+            mostrarError(e.getMessage());
         }
     }
 
@@ -329,33 +374,25 @@ public class VentaController {
     public void registrarCliente() {
 
         try {
-
             Cliente nuevo =
-                    clienteService.registrarCliente(
-                            campoCedulaCliente.getText(),
-                            campoNombreCliente.getText(),
-                            campoTelefonoCliente.getText(),
-                            campoEmailCliente.getText()
-                    );
-
+                    clienteService.registrarCliente(campoCedulaCliente.getText(), campoNombreCliente.getText(), campoTelefonoCliente.getText(), campoEmailCliente.getText());
             clienteActual = nuevo;
-
-            labelClienteInfo.setText(
-                    nuevo.getNombre()
-                            + " ("
-                            + nuevo.getId()
-                            + ")"
-            );
+            labelClienteInfo.setText(nuevo.getNombre() + " (" + nuevo.getId() + ")");
 
             campoNombreCliente.clear();
             campoTelefonoCliente.clear();
             campoEmailCliente.clear();
 
-        } catch (Exception e) {
+            // CAMBIO CLIENTES: se recarga la lista para que el cliente recién
+            // registrado aparezca en el combo, y se deja seleccionado.
+            cargarClientes();
+            seleccionarClienteEnCombo(nuevo.getId());
 
+        } catch (Exception e) {
             mostrarError(e.getMessage());
         }
     }
+
 
     /**
      * Agrega el producto seleccionado al carrito.
@@ -661,7 +698,7 @@ public class VentaController {
         }
     }
 
-    /**
+    /*
      * Limpia los datos de la venta actual después de
      * completar una operación.
      *
@@ -679,6 +716,10 @@ public class VentaController {
         labelClienteInfo.setText("");
 
         clienteActual = null;
+
+        // CAMBIO CLIENTES: al terminar la venta también se deja el combo sin selección,
+        // para que la siguiente venta empiece sin cliente elegido.
+        comboClientes.setValue(null);
 
         actualizarTotales();
     }
@@ -735,4 +776,49 @@ public class VentaController {
 
         alerta.showAndWait();
     }
+
+    /**
+     * CAMBIO CLIENTES: carga los clientes registrados en el ComboBox.
+     *
+     * Consulta MySQL, así que lleva try/catch: si la base falla se muestra
+     * una alerta en lugar de cerrar la aplicación.
+     */
+    public void cargarClientes() {
+
+        try {
+
+            comboClientes.setItems(
+                    FXCollections.observableArrayList(
+                            clienteService.listarClientes()
+                    )
+            );
+
+        } catch (Exception e) {
+
+            mostrarError(e.getMessage());
+        }
+    }
+
+    /**
+     * CAMBIO CLIENTES: selecciona en el ComboBox al cliente con el id indicado.
+     *
+     * Se busca dentro de los elementos del combo porque este solo reconoce
+     * como seleccionados a los mismos objetos que contiene su lista.
+     *
+     * @param idCliente id del cliente que se desea seleccionar
+     */
+    private void seleccionarClienteEnCombo(String idCliente) {
+
+        for (Cliente c : comboClientes.getItems()) {
+
+            if (c.getId().equals(idCliente)) {
+
+                comboClientes.getSelectionModel().select(c);
+
+                return;
+            }
+        }
+    }
+
+
 }
